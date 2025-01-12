@@ -1,11 +1,10 @@
-package com.plantbreeding.model;
+package com.plantbreeding.domain.entity;
 
-import com.plantbreeding.config.TaskStatus;
-import com.plantbreeding.config.TaskType;
+import com.plantbreeding.domain.enumeration.TaskStatus;
+import com.plantbreeding.domain.enumeration.TaskType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,5 +37,6 @@ public class Task {
 
     @Version
     private Integer version;
+
 }
 

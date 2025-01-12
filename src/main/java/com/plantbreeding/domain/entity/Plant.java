@@ -1,11 +1,10 @@
-package com.plantbreeding.model;
+package com.plantbreeding.domain.entity;
 
-import com.plantbreeding.config.HealthStatus;
-import com.plantbreeding.config.PlantType;
+import com.plantbreeding.domain.enumeration.HealthStatus;
+import com.plantbreeding.domain.enumeration.PlantType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -24,7 +24,7 @@ public class PlantRestController {
     }
 
     @GetMapping
-    public ResponseEntity<GetAllPlantsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit){
+    public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit){
         allPlants = plantRetreiver.findAll();
         Map<Long, Plant> allPlantsMap = allPlants.stream()
                 .collect(Collectors.toMap(Plant::getId, Function.identity(),

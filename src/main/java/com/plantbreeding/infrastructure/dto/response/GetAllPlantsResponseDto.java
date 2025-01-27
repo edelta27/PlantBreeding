@@ -1,4 +1,4 @@
-package com.plantbreeding.infrastructure.dto;
+package com.plantbreeding.infrastructure.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.plantbreeding.domain.entity.Plant;

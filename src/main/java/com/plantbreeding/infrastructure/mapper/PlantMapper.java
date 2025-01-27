@@ -1,4 +1,4 @@
-package com.plantbreeding.infrastructure;
+package com.plantbreeding.infrastructure.mapper;
 
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;

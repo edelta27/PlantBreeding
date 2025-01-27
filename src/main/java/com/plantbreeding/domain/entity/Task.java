@@ -38,5 +38,57 @@ public class Task {
     @Version
     private Integer version;
 
+    public Task(Long id, TaskType taskType, String notes, LocalDate taskDate, TaskStatus status) {
+        this.id = id;
+        this.taskType = taskType;
+        this.notes = notes;
+        this.taskDate = taskDate;
+        this.status = status;
+    }
+
+    public Task() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public LocalDate getTaskDate() {
+        return taskDate;
+    }
+
+    public void setTaskDate(LocalDate taskDate) {
+        this.taskDate = taskDate;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
 }
 

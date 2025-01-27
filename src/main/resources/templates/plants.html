@@ -6,8 +6,8 @@
 <body>
 <h1>Plants List</h1>
 <ul>
-    <li th:each="song : ${songMap}">
-        <span th:text="'Song ' + ${song.key} + ': ' + ${song.value}"></span>
+    <li th:each="plant : ${plantMap}">
+        <span th:text="'Plant ' + ${plant.key} + ': ' + ${plant.value}"></span>
     </li>
 </ul>
     </tbody>

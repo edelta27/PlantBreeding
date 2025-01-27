@@ -1,14 +1,23 @@
 package com.plantbreeding.infrastructure;
 
+import com.plantbreeding.dao.PlantRepository;
 import com.plantbreeding.domain.entity.Plant;
+import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enumeration.PlantType;
+import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.domain.service.PlantRetreiver;
-import com.plantbreeding.infrastructure.dto.GetAllPlantsResponseDto;
-import com.plantbreeding.infrastructure.dto.GetAnnualAndTypePlantsResponseDto;
+import com.plantbreeding.domain.service.TaskService;
+import com.plantbreeding.infrastructure.dto.response.GetAllPlantsResponseDto;
+import com.plantbreeding.infrastructure.dto.response.GetAllTasksResponseDto;
+import com.plantbreeding.infrastructure.dto.response.GetAnnualAndTypePlantsResponseDto;
 
+import com.plantbreeding.infrastructure.dto.response.GetPlantResponseDto;
+import com.plantbreeding.infrastructure.mapper.PlantMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,11 +26,16 @@ import java.util.stream.Collectors;
 public class PlantRestController {
     //private final PlantAdder plantAdder;
     private final PlantRetreiver plantRetreiver;
+    private final PlantRepository plantRepository;
+    private final TaskService taskService;
     private List<Plant> allPlants;
     private PlantMapper plantMapper;
 
-    public PlantRestController(PlantRetreiver plantRetreiver) {
+    public PlantRestController(PlantRetreiver plantRetreiver, PlantRepository plantRepository, TaskService taskService) {
         this.plantRetreiver = plantRetreiver;
+        this.plantRepository = plantRepository;
+        this.taskService = taskService;
+
     }
 
     @GetMapping("/plants/all")
@@ -51,19 +65,21 @@ public class PlantRestController {
         GetAnnualAndTypePlantsResponseDto response = new GetAnnualAndTypePlantsResponseDto(filteredPlants);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/plants/{id}")
+    public ResponseEntity<GetPlantResponseDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
+        log.info(requestId);
+         Plant plant = plantRepository.findById(id)
+            .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
+        GetPlantResponseDto response = new GetPlantResponseDto(plant);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/tasks/daily")
+    public ResponseEntity<GetAllTasksResponseDto> getTasksForDate(@RequestParam("date") LocalDate taskDate) {
+        List<Task> tasks = taskService.findTasksByDate(taskDate);
+        GetAllTasksResponseDto response = new GetAllTasksResponseDto(tasks);
+        return ResponseEntity.ok(response);
+    }
 
-
-
-//    @GetMapping("/plants/{id}")
-//    public ResponseEntity<GetSongResponseDto> getSongByID(@PathVariable Integer id, @RequestHeader(required = false) String requestId){
-//        log.info(requestId);
-//        if(!songRetreiver.findAll().containsKey(id)){
-//            throw new SongNotFoundException("Song with id " + id + " not found");
-//        }
-//        Song song = songRetreiver.findAll().get(id);
-//        GetSongResponseDto response = new GetSongResponseDto(song);
-//        return ResponseEntity.ok(response);
-//    }
 //
 //    @PostMapping
 //    public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request){

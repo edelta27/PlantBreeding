@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tasks List</title>
+</head>
+<body>
+<h1>Tasks List</h1>
+<ul>
+    <li th:each="task : ${taskMap}">
+        <span th:text="'Task ' + ${task.key} + ': ' + ${task.value}"></span>
+    </li>
+</ul>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,51 +1,60 @@
 package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.entity.Plant;
+import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.service.PlantRetreiver;
 import com.plantbreeding.infrastructure.dto.GetAllPlantsResponseDto;
+import com.plantbreeding.infrastructure.dto.GetAnnualAndTypePlantsResponseDto;
+
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
-@RequestMapping("/plants")
 public class PlantRestController {
     //private final PlantAdder plantAdder;
     private final PlantRetreiver plantRetreiver;
     private List<Plant> allPlants;
+    private PlantMapper plantMapper;
 
     public PlantRestController(PlantRetreiver plantRetreiver) {
         this.plantRetreiver = plantRetreiver;
     }
 
-    @GetMapping
+    @GetMapping("/plants/all")
     public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit){
         allPlants = plantRetreiver.findAll();
-        Map<Long, Plant> allPlantsMap = allPlants.stream()
-                .collect(Collectors.toMap(Plant::getId, Function.identity(),
-                        (key1, key2) -> {
-                            throw new IllegalStateException(String.format("Duplicate key value found for %s", key1));
-                        }));
         if(limit != null) {
-            Map<Long, Plant> limitedMap = allPlants.stream()
+            List<Plant> limitedList = allPlants.stream()
                     .limit(limit)
-                    .collect(Collectors.toMap(Plant::getId, Function.identity(),
-                            (key1, key2) -> {
-                                throw new IllegalStateException(String.format("Duplicate key value found for %s", key1));
-                            }));
-            GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(limitedMap);
+                    .collect(Collectors.toList());
+            GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(limitedList);
             return ResponseEntity.ok(response);
         }
-
-        GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(allPlantsMap);
+        GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(allPlants);
         return ResponseEntity.ok(response);
     }
-//    @GetMapping("/{id}")
+
+    @GetMapping("/plants")
+    public ResponseEntity<GetAnnualAndTypePlantsResponseDto> getFilteredPlants(
+            @RequestParam(required = false) Boolean isAnnual,
+            @RequestParam(required = false) PlantType type) {
+
+        List<Plant> plants = plantRetreiver.findAll();
+        List<Plant> filteredPlants = plants.stream()
+                .filter(plant -> isAnnual == null || plant.getAnnual().equals(isAnnual))
+                .filter(plant -> type == null || plant.getType().equals(type))
+                .collect(Collectors.toList());
+        GetAnnualAndTypePlantsResponseDto response = new GetAnnualAndTypePlantsResponseDto(filteredPlants);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+//    @GetMapping("/plants/{id}")
 //    public ResponseEntity<GetSongResponseDto> getSongByID(@PathVariable Integer id, @RequestHeader(required = false) String requestId){
 //        log.info(requestId);
 //        if(!songRetreiver.findAll().containsKey(id)){

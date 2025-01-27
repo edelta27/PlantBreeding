@@ -1,11 +1,12 @@
 package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.entity.Plant;
-import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
+import com.plantbreeding.infrastructure.dto.request.PlantDto;
+import org.mapstruct.Mapper;
 
-//@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring")
 public interface PlantMapper {
-    CreatePlantRequestDto toDto(Plant plant);
-    Plant toEntity(CreatePlantRequestDto plantDto);
+    PlantDto toDto(Plant plant);
+    Plant toEntity(PlantDto plantDto);
 }
 

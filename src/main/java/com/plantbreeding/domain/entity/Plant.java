@@ -26,7 +26,7 @@ public class Plant {
     private LocalDate plantingDate;
 
     @Enumerated(EnumType.STRING)
-    private HealthStatus healthStatus;  // Enum: HEALTHY, SICK, DEAD
+    private HealthStatus healthStatus;
 
     private Boolean isAnnual;  // true = annual, false = perennial
 
@@ -35,14 +35,14 @@ public class Plant {
     private Integer height;
 
     @OneToMany(mappedBy = "plant")
-    private List<Task> tasks;  // Relacja 1:N
+    private List<Task> tasks;
 
     @ManyToMany
     @JoinTable(
             name = "plant_fertilizer",
             joinColumns = @JoinColumn(name = "plant_id"),
             inverseJoinColumns = @JoinColumn(name = "fertilizer_id"))
-    private List<Fertilizer> fertilizers;  // Relacja M:N
+    private List<Fertilizer> fertilizers;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -63,7 +63,6 @@ public class Plant {
     public Plant() {
     }
 
-    // Konstruktor z wszystkimi polami (opcjonalny, jeśli potrzebujesz do ułatwienia testów lub tworzenia obiektów)
     public Plant(String name, PlantType type, LocalDate plantingDate, HealthStatus healthStatus, Boolean isAnnual, String description, Integer height) {
         this.name = name;
         this.type = type;

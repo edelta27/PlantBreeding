@@ -5,15 +5,15 @@ import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
-import com.plantbreeding.domain.service.PlantRetreiver;
+import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.domain.service.TaskService;
-import com.plantbreeding.infrastructure.dto.response.GetAllPlantsResponseDto;
-import com.plantbreeding.infrastructure.dto.response.GetAllTasksResponseDto;
-import com.plantbreeding.infrastructure.dto.response.GetAnnualAndTypePlantsResponseDto;
+import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
+import com.plantbreeding.infrastructure.dto.response.*;
 
-import com.plantbreeding.infrastructure.dto.response.GetPlantResponseDto;
 import com.plantbreeding.infrastructure.mapper.PlantMapper;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,15 +24,14 @@ import java.util.stream.Collectors;
 @RestController
 @Log4j2
 public class PlantRestController {
-    //private final PlantAdder plantAdder;
-    private final PlantRetreiver plantRetreiver;
+    private final PlantService plantService;
     private final PlantRepository plantRepository;
     private final TaskService taskService;
     private List<Plant> allPlants;
     private PlantMapper plantMapper;
 
-    public PlantRestController(PlantRetreiver plantRetreiver, PlantRepository plantRepository, TaskService taskService) {
-        this.plantRetreiver = plantRetreiver;
+    public PlantRestController(PlantService plantService, PlantRepository plantRepository, TaskService taskService) {
+        this.plantService = plantService;
         this.plantRepository = plantRepository;
         this.taskService = taskService;
 
@@ -40,7 +39,7 @@ public class PlantRestController {
 
     @GetMapping("/plants/all")
     public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit){
-        allPlants = plantRetreiver.findAll();
+        allPlants = plantService.findAll();
         if(limit != null) {
             List<Plant> limitedList = allPlants.stream()
                     .limit(limit)
@@ -57,7 +56,7 @@ public class PlantRestController {
             @RequestParam(required = false) Boolean isAnnual,
             @RequestParam(required = false) PlantType type) {
 
-        List<Plant> plants = plantRetreiver.findAll();
+        List<Plant> plants = plantService.findAll();
         List<Plant> filteredPlants = plants.stream()
                 .filter(plant -> isAnnual == null || plant.getAnnual().equals(isAnnual))
                 .filter(plant -> type == null || plant.getType().equals(type))
@@ -80,14 +79,12 @@ public class PlantRestController {
         return ResponseEntity.ok(response);
     }
 
-//
-//    @PostMapping
-//    public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request){
-//        Song song = SongMapper.mapFromCreateSongRequestDtoToSong(request);
-//        songAdder.addSong(song);
-//        CreateSongResponseDto body = SongMapper.mapFromSongToCreateSongResponseDto(song);
-//        return ResponseEntity.ok(body);
-//    }
+
+    @PostMapping("/plants")
+    public ResponseEntity<String> postPlant(@RequestBody @Valid CreatePlantRequestDto plant){
+        plantService.addPlant(plant);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Plant added successfully");
+    }
 //
 //
 //

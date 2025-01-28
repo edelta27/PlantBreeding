@@ -2,7 +2,7 @@ package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
-import com.plantbreeding.domain.service.PlantRetreiver;
+import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.domain.service.TaskService;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
 import com.plantbreeding.infrastructure.dto.request.TaskDto;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 public class PlantViewController {
-    private final PlantRetreiver plantService;
+    private final PlantService plantService;
     private final PlantMapper plantMapper;
     private final TaskService taskService;
     private final TaskMapper taskMapper;
 
-    public PlantViewController(PlantRetreiver plantService, PlantMapper plantMapper, TaskService taskService, TaskMapper taskMapper) {
+    public PlantViewController(PlantService plantService, PlantMapper plantMapper, TaskService taskService, TaskMapper taskMapper) {
         this.plantService = plantService;
         this.plantMapper = plantMapper;
         this.taskService = taskService;

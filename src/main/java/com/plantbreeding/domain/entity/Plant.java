@@ -3,6 +3,8 @@ package com.plantbreeding.domain.entity;
 import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -60,8 +62,7 @@ public class Plant {
     public void setId(Long id) {
         this.id = id;
     }
-    public Plant() {
-    }
+    public Plant(){}
 
     public Plant(String name, PlantType type, LocalDate plantingDate, HealthStatus healthStatus, Boolean isAnnual, String description, Integer height) {
         this.name = name;

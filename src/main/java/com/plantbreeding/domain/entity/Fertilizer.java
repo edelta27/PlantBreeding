@@ -38,7 +38,13 @@ public class Fertilizer {
     private Integer version;
 
     public Fertilizer() {
+    }
 
+    public Fertilizer(String name, FertilizerType type, ApplicationMethod applicationMethod, String usageRecommendations) {
+        this.name = name;
+        this.type = type;
+        this.applicationMethod = applicationMethod;
+        this.usageRecommendations = usageRecommendations;
     }
 
     public Long getId() {

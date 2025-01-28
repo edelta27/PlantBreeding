@@ -1,12 +1,15 @@
 package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.dao.PlantRepository;
+import com.plantbreeding.domain.entity.Fertilizer;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
+import com.plantbreeding.domain.service.FertilizerService;
 import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.domain.service.TaskService;
+import com.plantbreeding.infrastructure.dto.request.CreateFertilizerRequestDto;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.response.*;
 
@@ -27,14 +30,16 @@ public class PlantRestController {
     private final PlantService plantService;
     private final PlantRepository plantRepository;
     private final TaskService taskService;
+    private final FertilizerService fertilizerService;
     private List<Plant> allPlants;
+    private List<Fertilizer> allFertilizers;
     private PlantMapper plantMapper;
 
-    public PlantRestController(PlantService plantService, PlantRepository plantRepository, TaskService taskService) {
+    public PlantRestController(PlantService plantService, PlantRepository plantRepository, TaskService taskService, FertilizerService fertilizerService) {
         this.plantService = plantService;
         this.plantRepository = plantRepository;
         this.taskService = taskService;
-
+        this.fertilizerService = fertilizerService;
     }
 
     @GetMapping("/plants/all")
@@ -79,12 +84,26 @@ public class PlantRestController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/fertilizer")
+    public ResponseEntity<GetAllFertilizerResponseDto> getAllFertilizer(){
+        allFertilizers = fertilizerService.findAllFerilizer();
+        GetAllFertilizerResponseDto response = new GetAllFertilizerResponseDto(allFertilizers);
+        return ResponseEntity.ok(response);
+    }
+
 
     @PostMapping("/plants")
     public ResponseEntity<String> postPlant(@RequestBody @Valid CreatePlantRequestDto plant){
         plantService.addPlant(plant);
         return ResponseEntity.status(HttpStatus.CREATED).body("Plant added successfully");
     }
+
+    @PostMapping("/fertilizer")
+    public ResponseEntity<String> postFertilizer(@RequestBody @Valid CreateFertilizerRequestDto fertilizer){
+        fertilizerService.addFertilizer(fertilizer);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Fertilizer added successfully");
+    }
+
 //
 //
 //

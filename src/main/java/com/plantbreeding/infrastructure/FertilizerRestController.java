@@ -22,10 +22,10 @@ public class FertilizerRestController {
         this.fertilizerService = fertilizerService;
     }
 
-    @GetMapping("/fertilizer")
+    @GetMapping("/fertilizers")
     public ResponseEntity<GetAllFertilizerResponseDto> getAllFertilizer(){
         List<Fertilizer> allFertilizers;
-        allFertilizers = fertilizerService.findAllFerilizer();
+        allFertilizers = fertilizerService.findAllFertilizer();
         GetAllFertilizerResponseDto response = new GetAllFertilizerResponseDto(allFertilizers);
         return ResponseEntity.ok(response);
     }

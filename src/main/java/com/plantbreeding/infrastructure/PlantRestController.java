@@ -1,9 +1,7 @@
 package com.plantbreeding.infrastructure;
 
-import com.plantbreeding.dao.PlantRepository;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enumeration.PlantType;
-import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.response.*;
@@ -15,45 +13,37 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/plants")
 @Log4j2
 public class PlantRestController {
     private final PlantService plantService;
-    private final PlantRepository plantRepository;
 
 
-    public PlantRestController(PlantService plantService, PlantRepository plantRepository) {
+    public PlantRestController(PlantService plantService) {
         this.plantService = plantService;
-        this.plantRepository = plantRepository;
     }
 
-    @GetMapping("/plants")
+    @GetMapping()
     public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit,
                                                                 @RequestParam(required = false) Boolean isAnnual,
                                                                 @RequestParam(required = false) PlantType type){
-        List<Plant> plants = plantService.findAll();
-        List<Plant> filteredPlants = plants.stream()
-                .filter(plant -> isAnnual == null || plant.getAnnual().equals(isAnnual))
-                .filter(plant -> type == null || plant.getType().equals(type))
-                .limit(limit != null ? limit : plants.size())
-                .collect(Collectors.toList());
-
+        int actualLimit = (limit != null) ? limit : Integer.MAX_VALUE;
+        List<Plant> filteredPlants = plantService.findFilteredPlants(isAnnual, type, actualLimit);
         GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(filteredPlants);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/plants/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<GetPlantResponseDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
-        log.info(requestId);
-         Plant plant = plantRepository.findById(id)
-            .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
+        log.info("Request ID: {}", requestId != null ? requestId : id);
+        Plant plant = plantService.getPlantById(id);
         GetPlantResponseDto response = new GetPlantResponseDto(plant);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/plants")
+    @PostMapping()
     public ResponseEntity<String> postPlant(@RequestBody @Valid CreatePlantRequestDto plant){
         plantService.addPlant(plant);
         return ResponseEntity.status(HttpStatus.CREATED).body("Plant added successfully");

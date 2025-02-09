@@ -16,7 +16,7 @@ public class FertilizerService {
     public FertilizerService(FertilizerRepository fertilizerRepository) {
         this.fertilizerRepository = fertilizerRepository;
     }
-    public List<Fertilizer> findAllFerilizer() {
+    public List<Fertilizer> findAllFertilizer() {
         log.info("retrieving all fertilizers: ");
         return fertilizerRepository.findAll();
     }

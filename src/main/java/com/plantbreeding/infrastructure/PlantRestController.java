@@ -1,6 +1,7 @@
 package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.entity.Plant;
+import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
@@ -45,6 +46,14 @@ public class PlantRestController {
     public ResponseEntity<String> postPlant(@RequestBody @Valid CreatePlantRequestDto plant){
         plantService.addPlant(plant);
         return ResponseEntity.status(HttpStatus.CREATED).body("Plant added successfully");
+    }
+
+    @PutMapping("/{id}/update")
+    public ResponseEntity<String> updatePlant(@PathVariable Long id,
+                                              @RequestParam HealthStatus healthStatus,
+                                              @RequestParam int height) {
+        plantService.updatePlantHealthAndHeight(id, healthStatus, height);
+        return ResponseEntity.ok("Plant updated successfully");
     }
 
 }

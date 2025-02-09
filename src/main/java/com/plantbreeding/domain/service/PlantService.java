@@ -2,6 +2,7 @@ package com.plantbreeding.domain.service;
 
 import com.plantbreeding.dao.PlantRepository;
 import com.plantbreeding.domain.entity.Plant;
+import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -54,5 +56,14 @@ public class PlantService {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
         return plantMapper.toDto(plant);
+    }
+
+    @Transactional
+    public void updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, int newHeight) {
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
+
+        plant.setHealthStatus(newHealthStatus);
+        plant.setHeight(newHeight);
     }
 }

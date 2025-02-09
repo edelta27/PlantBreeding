@@ -29,34 +29,21 @@ public class PlantRestController {
         this.plantRepository = plantRepository;
     }
 
-    @GetMapping("/plants/all")
-    public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit){
-        List<Plant> allPlants;
-        allPlants = plantService.findAll();
-        if(limit != null) {
-            List<Plant> limitedList = allPlants.stream()
-                    .limit(limit)
-                    .collect(Collectors.toList());
-            GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(limitedList);
-            return ResponseEntity.ok(response);
-        }
-        GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(allPlants);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/plants")
-    public ResponseEntity<GetAnnualAndTypePlantsResponseDto> getFilteredPlants(
-            @RequestParam(required = false) Boolean isAnnual,
-            @RequestParam(required = false) PlantType type) {
-
+    public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit,
+                                                                @RequestParam(required = false) Boolean isAnnual,
+                                                                @RequestParam(required = false) PlantType type){
         List<Plant> plants = plantService.findAll();
         List<Plant> filteredPlants = plants.stream()
                 .filter(plant -> isAnnual == null || plant.getAnnual().equals(isAnnual))
                 .filter(plant -> type == null || plant.getType().equals(type))
+                .limit(limit != null ? limit : plants.size())
                 .collect(Collectors.toList());
-        GetAnnualAndTypePlantsResponseDto response = new GetAnnualAndTypePlantsResponseDto(filteredPlants);
+
+        GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(filteredPlants);
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/plants/{id}")
     public ResponseEntity<GetPlantResponseDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
         log.info(requestId);

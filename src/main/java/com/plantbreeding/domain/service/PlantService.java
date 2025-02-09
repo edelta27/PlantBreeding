@@ -6,6 +6,7 @@ import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
+import com.plantbreeding.infrastructure.mapper.PlantMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -18,9 +19,12 @@ import java.util.List;
 @Log4j2
 public class PlantService {
     private final PlantRepository plantRepository;
+    private final PlantMapper plantMapper;
     @Autowired
-    PlantService(PlantRepository plantRepository){
+    PlantService(PlantRepository plantRepository, PlantMapper plantMapper){
+
         this.plantRepository = plantRepository;
+        this.plantMapper = plantMapper;
     }
     public List<Plant> findAll() {
         log.info("retrieving all plants: ");
@@ -46,8 +50,9 @@ public class PlantService {
         return plantRepository.findFilteredPlants(isAnnual, type, pageable);
     }
 
-    public Plant getPlantById(Long id) {
-        return plantRepository.findById(id)
+    public PlantDto getPlantById(Long id) {
+        Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
+        return plantMapper.toDto(plant);
     }
 }

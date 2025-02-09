@@ -4,6 +4,7 @@ import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
+import com.plantbreeding.infrastructure.dto.request.PlantDto;
 import com.plantbreeding.infrastructure.dto.response.*;
 
 import jakarta.validation.Valid;
@@ -19,8 +20,6 @@ import java.util.List;
 @Log4j2
 public class PlantRestController {
     private final PlantService plantService;
-
-
     public PlantRestController(PlantService plantService) {
         this.plantService = plantService;
     }
@@ -36,10 +35,9 @@ public class PlantRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetPlantResponseDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
+    public ResponseEntity<PlantDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
         log.info("Request ID: {}", requestId != null ? requestId : id);
-        Plant plant = plantService.getPlantById(id);
-        GetPlantResponseDto response = new GetPlantResponseDto(plant);
+        PlantDto response = plantService.getPlantById(id);
         return ResponseEntity.ok(response);
     }
 

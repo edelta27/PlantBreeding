@@ -22,10 +22,10 @@ public class PlantService {
     private final PlantMapper plantMapper;
     @Autowired
     PlantService(PlantRepository plantRepository, PlantMapper plantMapper){
-
         this.plantRepository = plantRepository;
         this.plantMapper = plantMapper;
     }
+
     public List<Plant> findAll() {
         log.info("retrieving all plants: ");
         return plantRepository.findAll();

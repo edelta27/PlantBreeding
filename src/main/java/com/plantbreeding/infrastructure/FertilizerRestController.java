@@ -1,7 +1,5 @@
 package com.plantbreeding.infrastructure;
 
-
-import com.plantbreeding.domain.entity.Fertilizer;
 import com.plantbreeding.domain.service.FertilizerService;
 import com.plantbreeding.infrastructure.dto.request.CreateFertilizerRequestDto;
 import com.plantbreeding.infrastructure.dto.response.GetAllFertilizerResponseDto;
@@ -11,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
+@RequestMapping("/fertilizers")
 @Log4j2
 public class FertilizerRestController {
     private final FertilizerService fertilizerService;
@@ -22,19 +20,16 @@ public class FertilizerRestController {
         this.fertilizerService = fertilizerService;
     }
 
-    @GetMapping("/fertilizers")
+    @GetMapping()
     public ResponseEntity<GetAllFertilizerResponseDto> getAllFertilizer(){
-        List<Fertilizer> allFertilizers;
-        allFertilizers = fertilizerService.findAllFertilizer();
-        GetAllFertilizerResponseDto response = new GetAllFertilizerResponseDto(allFertilizers);
+        GetAllFertilizerResponseDto response = fertilizerService.getAllFertilizers();
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/fertilizer")
+    @PostMapping()
     public ResponseEntity<String> postFertilizer(@RequestBody @Valid CreateFertilizerRequestDto fertilizer){
         fertilizerService.addFertilizer(fertilizer);
         return ResponseEntity.status(HttpStatus.CREATED).body("Fertilizer added successfully");
     }
-
 
 }

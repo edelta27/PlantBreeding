@@ -15,10 +15,12 @@ public class TaskService {
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
+
     public List<Task> findAll() {
         log.info("retrieving all tasks: ");
         return taskRepository.findAll();
     }
+
     public List<Task> findTasksByDate(LocalDate taskDate) {
         return taskRepository.findByTaskDate(taskDate);
     }

@@ -5,7 +5,6 @@ import com.plantbreeding.domain.enumeration.TaskType;
 
 import java.time.LocalDate;
 
-
 public record TaskDto(Long id,
                       TaskType taskType,
                       String notes,

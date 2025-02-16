@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByTaskDate(LocalDate taskDate);
+
+    void deleteByPlantId(Long plantId);
 }

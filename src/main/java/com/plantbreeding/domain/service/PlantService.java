@@ -1,6 +1,7 @@
 package com.plantbreeding.domain.service;
 
 import com.plantbreeding.dao.PlantRepository;
+import com.plantbreeding.dao.TaskRepository;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
@@ -22,10 +23,12 @@ import java.util.List;
 public class PlantService {
     private final PlantRepository plantRepository;
     private final PlantMapper plantMapper;
+    private final TaskRepository taskRepository;
     @Autowired
-    PlantService(PlantRepository plantRepository, PlantMapper plantMapper){
+    PlantService(PlantRepository plantRepository, PlantMapper plantMapper, TaskRepository taskRepository){
         this.plantRepository = plantRepository;
         this.plantMapper = plantMapper;
+        this.taskRepository = taskRepository;
     }
 
     public List<Plant> findAll() {
@@ -59,11 +62,25 @@ public class PlantService {
     }
 
     @Transactional
-    public void updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, int newHeight) {
+    public void updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, Integer newHeight) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
 
-        plant.setHealthStatus(newHealthStatus);
-        plant.setHeight(newHeight);
+        if (newHealthStatus != null) {
+            plant.setHealthStatus(newHealthStatus);
+        }
+        if (newHeight != null) {
+            plant.setHeight(newHeight);
+        }
+
+        plantRepository.save(plant);
+    }
+
+    @Transactional
+    public void deletePlant(Long id) {
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(() -> new PlantNotFoundException("Plant with id" + id + " not found"));
+        taskRepository.deleteByPlantId(id);
+        plantRepository.deleteById(id);
     }
 }

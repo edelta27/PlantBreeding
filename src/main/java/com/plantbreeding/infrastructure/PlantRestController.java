@@ -3,6 +3,7 @@ package com.plantbreeding.infrastructure;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
+import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
@@ -48,12 +49,18 @@ public class PlantRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Plant added successfully");
     }
 
-    @PutMapping("/{id}/update")
+    @PatchMapping ("/{id}")
     public ResponseEntity<String> updatePlant(@PathVariable Long id,
                                               @RequestParam HealthStatus healthStatus,
                                               @RequestParam int height) {
         plantService.updatePlantHealthAndHeight(id, healthStatus, height);
         return ResponseEntity.ok("Plant updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeletePlantResponseDto> deletePlant(@PathVariable Long id){
+        plantService.deletePlant(id);
+        return ResponseEntity.ok(new DeletePlantResponseDto("You deleted plant with id: " + id, HttpStatus.OK));
     }
 
 }

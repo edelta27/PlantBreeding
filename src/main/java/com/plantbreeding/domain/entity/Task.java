@@ -38,8 +38,17 @@ public class Task {
     @Version
     private Integer version;
 
-    public Task(Long id, TaskType taskType, String notes, LocalDate taskDate, TaskStatus status) {
-        this.id = id;
+
+
+    public Task(TaskType taskType, String notes, LocalDate taskDate, TaskStatus status, Plant plant) {
+        this.taskType = taskType;
+        this.notes = notes;
+        this.taskDate = taskDate;
+        this.status = status;
+        this.plant = plant;
+    }
+
+    public Task(TaskType taskType, String notes, LocalDate taskDate, TaskStatus status) {
         this.taskType = taskType;
         this.notes = notes;
         this.taskDate = taskDate;
@@ -89,6 +98,9 @@ public class Task {
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
+    public Plant getPlant() { return plant; }
+
+    public void setPlant(Plant plant) { this.plant = plant; }
 
 }
 

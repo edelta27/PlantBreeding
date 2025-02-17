@@ -2,8 +2,11 @@ package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.service.TaskService;
+import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.infrastructure.dto.response.*;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -23,6 +26,12 @@ public class TaskRestController {
         List<Task> tasks = taskService.findTasksByDate(taskDate);
         GetAllTasksResponseDto response = new GetAllTasksResponseDto(tasks);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/tasks")
+    public ResponseEntity<String> addTask(@RequestBody @Valid CreateTaskRequestDto request) {
+        taskService.createTask(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Task(s) added successfully");
     }
 
 }

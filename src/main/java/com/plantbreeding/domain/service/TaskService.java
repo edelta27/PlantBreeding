@@ -7,6 +7,7 @@ import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enumeration.TaskStatus;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
+import com.plantbreeding.infrastructure.dto.request.TaskDto;
 import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,5 +65,19 @@ public class TaskService {
         }
 
         taskRepository.saveAll(tasks);
+    }
+
+    public List<TaskDto> findTasksByPlantId(Long plantId) {
+        return taskRepository.findByPlantId(plantId)
+                .stream()
+                .map(task -> new TaskDto(
+                        task.getId(),
+                        task.getTaskType(),
+                        task.getNotes(),
+                        task.getTaskDate(),
+                        task.getStatus(),
+                        task.getPlant().getId()
+                ))
+                .toList();
     }
 }

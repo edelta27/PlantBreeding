@@ -43,6 +43,11 @@ public class PlantRestController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<PlantWithTasksDto> getPlantWithTasks(@PathVariable Long id) {
+        return ResponseEntity.ok(plantService.getPlantWithTasks(id));
+    }
+
     @PostMapping()
     public ResponseEntity<String> postPlant(@RequestBody @Valid CreatePlantRequestDto plant){
         plantService.addPlant(plant);

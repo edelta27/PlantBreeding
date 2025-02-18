@@ -1,6 +1,8 @@
 package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.entity.Task;
+import com.plantbreeding.domain.enumeration.HealthStatus;
+import com.plantbreeding.domain.enumeration.TaskStatus;
 import com.plantbreeding.domain.service.TaskService;
 import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.infrastructure.dto.response.*;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @Log4j2
+@RequestMapping("/tasks")
 public class TaskRestController {
     private final TaskService taskService;
 
@@ -21,17 +24,24 @@ public class TaskRestController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/tasks/daily")
+    @GetMapping("/daily")
     public ResponseEntity<GetAllTasksResponseDto> getTasksForDate(@RequestParam("date") LocalDate taskDate) {
         List<Task> tasks = taskService.findTasksByDate(taskDate);
         GetAllTasksResponseDto response = new GetAllTasksResponseDto(tasks);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/tasks")
+    @PostMapping()
     public ResponseEntity<String> addTask(@RequestBody @Valid CreateTaskRequestDto request) {
         taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Task(s) added successfully");
+    }
+
+    @PatchMapping ("/{id}")
+    public ResponseEntity<String> updatePlant(@PathVariable Long id,
+                                              @RequestParam TaskStatus taskStatus) {
+        taskService.updatePlantHealthAndHeight(id, taskStatus);
+        return ResponseEntity.ok("Task updated successfully");
     }
 
 }

@@ -8,6 +8,8 @@ import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
+import com.plantbreeding.infrastructure.dto.request.TaskDto;
+import com.plantbreeding.infrastructure.dto.response.PlantWithTasksDto;
 import com.plantbreeding.infrastructure.mapper.PlantMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,13 @@ public class PlantService {
     private final PlantRepository plantRepository;
     private final PlantMapper plantMapper;
     private final TaskRepository taskRepository;
+    private final TaskService taskService;
     @Autowired
-    PlantService(PlantRepository plantRepository, PlantMapper plantMapper, TaskRepository taskRepository){
+    PlantService(PlantRepository plantRepository, PlantMapper plantMapper, TaskRepository taskRepository, TaskService taskService){
         this.plantRepository = plantRepository;
         this.plantMapper = plantMapper;
         this.taskRepository = taskRepository;
+        this.taskService = taskService;
     }
 
     public List<Plant> findAll() {
@@ -59,6 +63,22 @@ public class PlantService {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
         return plantMapper.toDto(plant);
+    }
+
+    public PlantWithTasksDto getPlantWithTasks(Long plantId) {
+        Plant plant = plantRepository.findById(plantId)
+                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + plantId + " not found"));
+
+        List<TaskDto> tasks = taskService.findTasksByPlantId(plantId);
+
+        return new PlantWithTasksDto(
+                plant.getId(),
+                plant.getName(),
+                plant.getType(),
+                plant.getHealthStatus(),
+                plant.getHeight(),
+                tasks
+        );
     }
 
     @Transactional

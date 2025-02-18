@@ -4,10 +4,13 @@ import com.plantbreeding.dao.PlantRepository;
 import com.plantbreeding.dao.TaskRepository;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
+import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.TaskStatus;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
+import com.plantbreeding.domain.errors.TaskNotFoundException;
 import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.infrastructure.dto.request.TaskDto;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,5 +82,30 @@ public class TaskService {
                         task.getPlant().getId()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public void updateTasksStatus(Long id, TaskStatus taskStatus) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
+
+        if (taskStatus != null) {
+            task.setStatus(taskStatus);
+        }
+
+        taskRepository.save(task);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void markOverdueTasks() {
+        LocalDate today = LocalDate.now();
+        List<Task> overdueTasks = taskRepository.findByStatusAndTaskDateBefore(TaskStatus.SCHEDULED, today);
+
+        if (!overdueTasks.isEmpty()) {
+            overdueTasks.forEach(task -> task.setStatus(TaskStatus.OVERDUE));
+            taskRepository.saveAll(overdueTasks);
+            log.info("Updated {} tasks on OVERDUE", overdueTasks.size());
+        }
     }
 }

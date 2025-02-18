@@ -38,9 +38,9 @@ public class TaskRestController {
     }
 
     @PatchMapping ("/{id}")
-    public ResponseEntity<String> updatePlant(@PathVariable Long id,
+    public ResponseEntity<String> updateTask(@PathVariable Long id,
                                               @RequestParam TaskStatus taskStatus) {
-        taskService.updatePlantHealthAndHeight(id, taskStatus);
+        taskService.updateTasksStatus(id, taskStatus);
         return ResponseEntity.ok("Task updated successfully");
     }
 

@@ -57,7 +57,7 @@ public class PlantRestController {
     @PatchMapping ("/{id}")
     public ResponseEntity<String> updatePlant(@PathVariable Long id,
                                               @RequestParam HealthStatus healthStatus,
-                                              @RequestParam int height) {
+                                              @RequestParam Integer height) {
         plantService.updatePlantHealthAndHeight(id, healthStatus, height);
         return ResponseEntity.ok("Plant updated successfully");
     }

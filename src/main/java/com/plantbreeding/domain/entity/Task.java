@@ -48,7 +48,8 @@ public class Task {
         this.plant = plant;
     }
 
-    public Task(TaskType taskType, String notes, LocalDate taskDate, TaskStatus status) {
+    public Task(Long id, TaskType taskType, String notes, LocalDate taskDate, TaskStatus status, Long plantId) {
+        this.id = id;
         this.taskType = taskType;
         this.notes = notes;
         this.taskDate = taskDate;

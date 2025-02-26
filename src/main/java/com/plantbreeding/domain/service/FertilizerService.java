@@ -2,7 +2,6 @@ package com.plantbreeding.domain.service;
 
 import com.plantbreeding.dao.FertilizerRepository;
 import com.plantbreeding.domain.entity.Fertilizer;
-import com.plantbreeding.infrastructure.dto.request.CreateFertilizerRequestDto;
 import com.plantbreeding.infrastructure.dto.request.FertilizerDto;
 import com.plantbreeding.infrastructure.dto.response.GetAllFertilizerResponseDto;
 import com.plantbreeding.infrastructure.mapper.FertilizerMapper;
@@ -28,14 +27,9 @@ public class FertilizerService {
         return new GetAllFertilizerResponseDto(fertilizersDtos);
     }
 
-    public void addFertilizer(CreateFertilizerRequestDto fertilizerDto) {
+    public void addFertilizer(FertilizerDto fertilizerDto) {
         log.info("save fertilizer: ");
-        Fertilizer fertilizer = new Fertilizer(
-                fertilizerDto.name(),
-                fertilizerDto.type(),
-                fertilizerDto.applicationMethod(),
-                fertilizerDto.usageRecommendations()
-        );
+        Fertilizer fertilizer = fertilizerMapper.toEntity(fertilizerDto);
         fertilizerRepository.save(fertilizer);
     }
 }

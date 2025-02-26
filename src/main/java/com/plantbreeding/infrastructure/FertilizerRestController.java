@@ -1,7 +1,7 @@
 package com.plantbreeding.infrastructure;
 
 import com.plantbreeding.domain.service.FertilizerService;
-import com.plantbreeding.infrastructure.dto.request.CreateFertilizerRequestDto;
+import com.plantbreeding.infrastructure.dto.request.FertilizerDto;
 import com.plantbreeding.infrastructure.dto.response.GetAllFertilizerResponseDto;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -27,7 +27,7 @@ public class FertilizerRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> postFertilizer(@RequestBody @Valid CreateFertilizerRequestDto fertilizer){
+    public ResponseEntity<String> postFertilizer(@RequestBody @Valid FertilizerDto fertilizer){
         fertilizerService.addFertilizer(fertilizer);
         return ResponseEntity.status(HttpStatus.CREATED).body("Fertilizer added successfully");
     }

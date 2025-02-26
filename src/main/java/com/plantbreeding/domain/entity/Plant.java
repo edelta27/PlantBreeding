@@ -30,13 +30,13 @@ public class Plant {
     @Enumerated(EnumType.STRING)
     private HealthStatus healthStatus;
 
-    private Boolean isAnnual;  // true = annual, false = perennial
+    private Boolean isAnnual;
 
     private String description;
 
     private Integer height;
 
-    @OneToMany(mappedBy = "plant")
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
     @ManyToMany

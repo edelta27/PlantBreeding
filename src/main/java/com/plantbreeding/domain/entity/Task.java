@@ -26,8 +26,8 @@ public class Task {
     private TaskStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "plant_id")
-    private Plant plant;  // Relacja M:1
+    @JoinColumn(name = "plant_id", nullable = false)
+    private Plant plant;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -26,7 +26,7 @@ public class Fertilizer {
     private String usageRecommendations;
 
     @ManyToMany(mappedBy = "fertilizers")
-    private List<Plant> plants;  // Relacja M:N
+    private List<Plant> plants;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

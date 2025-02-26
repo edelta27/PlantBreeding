@@ -1,10 +1,10 @@
 package com.plantbreeding.infrastructure.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.plantbreeding.domain.entity.Plant;
+import com.plantbreeding.infrastructure.dto.request.PlantDto;
 
 import java.util.List;
 
-public record GetAllPlantsResponseDto(@JsonProperty("plants") List<Plant> plants) {
+public record GetAllPlantsResponseDto(@JsonProperty("plants") List<PlantDto> plants) {
 
 }

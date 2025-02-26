@@ -1,9 +1,7 @@
 package com.plantbreeding.infrastructure;
 
-import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
-import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.domain.service.PlantService;
 import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
@@ -32,7 +30,7 @@ public class PlantRestController {
                                                                 @RequestParam(required = false) Boolean isAnnual,
                                                                 @RequestParam(required = false) PlantType type){
         int actualLimit = (limit != null) ? limit : Integer.MAX_VALUE;
-        List<Plant> filteredPlants = plantService.findFilteredPlants(isAnnual, type, actualLimit);
+        List<PlantDto> filteredPlants = plantService.findFilteredPlants(isAnnual, type, actualLimit);
         GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(filteredPlants);
         return ResponseEntity.ok(response);
     }

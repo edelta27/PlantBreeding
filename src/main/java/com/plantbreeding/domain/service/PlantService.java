@@ -54,9 +54,11 @@ public class PlantService {
         plantRepository.save(plant);
     }
 
-    public List<Plant> findFilteredPlants(Boolean isAnnual, PlantType type, int limit) {
+    public List<PlantDto> findFilteredPlants(Boolean isAnnual, PlantType type, int limit) {
         Pageable pageable = PageRequest.of(0, limit);
-        return plantRepository.findFilteredPlants(isAnnual, type, pageable);
+        List<Plant> plants = plantRepository.findFilteredPlants(isAnnual, type, pageable);
+        List<PlantDto> plantDtos = plantMapper.toDtoList(plants);
+        return plantDtos;
     }
 
     public PlantDto getPlantById(Long id) {

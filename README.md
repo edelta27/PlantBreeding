@@ -1,38 +1,40 @@
 # PlantBreeding
-Project CRUD 
 
-Overview
-This application is designed to manage plant cultivation and maintenance tasks. Users can track plant health, tasks related to plant care, and fertilizers used for various plants. The system allows easy retrieval and management of plant data, including their health status, planting date, and maintenance tasks.
+## Overview
 
-Features
-Plant Management:
+PlantBreeding is a plant management application designed to help users track plant health, maintenance tasks, and fertilizers used for various plants. The application allows users to add new plants, schedule maintenance tasks, and monitor plant status. With a focus on ease of use, it provides functionality to manage plant data, care tasks, and fertilizers efficiently.
 
-Add new plants, edit their details (health status, height, etc.), and delete them (which also deletes related tasks).
-List all plants, with the ability to filter by plant type and other criteria (e.g., perennial herbs).
-Retrieve detailed information about a specific plant.
-Maintenance Tasks:
+## Features
 
-Schedule and track maintenance tasks (e.g., watering, trimming, fertilizing) for each plant, including cyclic tasks with custom frequencies (daily, weekly, monthly).
-Track the status of tasks (Scheduled, Done, Overdue, Rejected).
-Automatic task status update for overdue tasks.
-Fertilizer Management:
+- **Plant Management**:
+  - Add new plants and edit their details, including health status, height, and description.
+  - Retrieve a list of all plants with filtering options (e.g., show all perennial herbs, show all annual plants).
+  - Fetch detailed information about a specific plant.
+  - Delete a plant (deletes related tasks, but does not affect fertilizers).
 
-Add and manage fertilizers used in plant care, including details like type and application method.
-Plants can be associated with multiple fertilizers, and a fertilizer can be used by multiple plants.
-Technical Aspects
-Technology Stack:
+- **Maintenance Task Management**:
+  - Schedule and manage maintenance tasks like watering, trimming, and fertilizing.
+  - Set cyclic tasks (e.g., daily, weekly) for a plant and track their status (Scheduled, Done, Overdue, Rejected).
+  - Implement automatic status updates for overdue tasks.
 
-Backend Framework: Spring Boot
-Build Tool: Maven
-Programming Language: Java 17 or higher
-Database: Any relational database (H2, PostgreSQL, MySQL)
-ORM: Hibernate
-Architectural Pattern: Layered architecture (Data layer, Business Logic layer, Presentation layer)
-Scheduler: For automatic task status update
-Key Technologies:
+- **Fertilizer Management**:
+  - Add and manage fertilizers used in plant care.
+  - Associate multiple fertilizers with plants and vice versa.
 
-DTOs (Data Transfer Objects): Used for data mapping between layers, utilizing libraries like MapStruct or ModelMapper.
-Versioning: Entities utilize @Version annotation to handle optimistic locking.
-Unit Testing:
+## Technical Aspects
 
-Unit tests are implemented for service classes and controllers to ensure the application’s correctness.
+- **Technology Stack**:
+  - **Backend Framework**: Spring Boot
+  - **Build Tool**: Maven
+  - **Programming Language**: Java 17+
+  - **Database**: Any relational database (H2, PostgreSQL)
+  - **ORM**: Hibernate
+  - **Architecture**: Layered architecture (Data Layer, Business Logic Layer, Presentation Layer)
+  - **Scheduler**: For automatic task status updates.
+
+- **Additional Technologies**:
+  - **DTOs** (Data Transfer Objects) for data mapping, using libraries like MapStruct or ModelMapper.
+  - **Unit Testing**: Test services and controllers to ensure proper functionality.
+
+- **Database Design**:
+  - Each entity (Plant, Task, Fertilizer) includes `id`, `createdDate`, `lastModifiedDate`, and `version` fields (with `@Version` annotation for optimistic locking).

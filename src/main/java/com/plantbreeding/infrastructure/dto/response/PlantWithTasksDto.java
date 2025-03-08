@@ -10,7 +10,7 @@ import java.util.List;
 public record PlantWithTasksDto(
         Long id,
         String name,
-        PlantType plantType,
+        PlantType type,
         HealthStatus healthStatus,
         int height,
         List<TaskDto> tasks

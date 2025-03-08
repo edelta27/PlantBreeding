@@ -124,12 +124,12 @@ public class Plant {
         this.healthStatus = healthStatus;
     }
 
-    public Boolean getAnnual() {
+    public Boolean getIsAnnual() {
         return isAnnual;
     }
 
-    public void setAnnual(Boolean annual) {
-        isAnnual = annual;
+    public void setISAnnual(Boolean isAnnual) {
+        this.isAnnual = isAnnual;
     }
 
     public String getDescription() {

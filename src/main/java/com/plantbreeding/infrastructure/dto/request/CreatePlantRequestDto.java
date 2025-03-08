@@ -12,7 +12,7 @@ public record CreatePlantRequestDto(Long id,
                                     @NotEmpty(message = "name must not be empty")
                                     String name,
                                     @NotNull(message = "type must not be null, choose: GREEN_PLANT, VEGETABLE, HERB, LEGUMS, ORNAMENTAL_PLANT")
-                                    PlantType type,
+                                    PlantType plantType,
                                     @NotNull(message = "plantingDate must not be null")
                                     LocalDate plantingDate,
                                     @NotNull(message = "healthStatus must not be null, choose: HEALTHY, SICK, DEAD")

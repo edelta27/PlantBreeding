@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public record PlantDto(Long id,
                        String name,
-                       PlantType type,
+                       PlantType plantType,
                        LocalDate plantingDate,
                        HealthStatus healthStatus,
                        Boolean isAnnual,

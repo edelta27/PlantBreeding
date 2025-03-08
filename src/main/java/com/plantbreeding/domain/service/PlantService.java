@@ -36,15 +36,7 @@ public class PlantService {
     @Transactional
     public void addPlant(CreatePlantRequestDto plantDto) {
         log.info("save plant: ");
-        Plant plant = new Plant(
-                plantDto.name(),
-                plantDto.type(),
-                plantDto.plantingDate(),
-                plantDto.healthStatus(),
-                plantDto.isAnnual(),
-                plantDto.description(),
-                plantDto.height()
-        );
+        Plant plant = plantMapper.toEntity(plantDto);
         plantRepository.save(plant);
     }
 

@@ -7,6 +7,7 @@ import com.plantbreeding.infrastructure.dto.response.GetAllFertilizerResponseDto
 import com.plantbreeding.infrastructure.mapper.FertilizerMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class FertilizerService {
         List<FertilizerDto> fertilizersDtos = fertilizerMapper.toDtoList(fertilizers);
         return new GetAllFertilizerResponseDto(fertilizersDtos);
     }
-
+    @Transactional
     public void addFertilizer(FertilizerDto fertilizerDto) {
         log.info("save fertilizer: ");
         Fertilizer fertilizer = fertilizerMapper.toEntity(fertilizerDto);

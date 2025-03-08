@@ -11,8 +11,8 @@ import com.plantbreeding.infrastructure.dto.request.PlantDto;
 import com.plantbreeding.infrastructure.dto.request.TaskDto;
 import com.plantbreeding.infrastructure.dto.response.PlantWithTasksDto;
 import com.plantbreeding.infrastructure.mapper.PlantMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,24 +22,18 @@ import java.util.List;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class PlantService {
     private final PlantRepository plantRepository;
     private final PlantMapper plantMapper;
     private final TaskRepository taskRepository;
     private final TaskService taskService;
-    @Autowired
-    PlantService(PlantRepository plantRepository, PlantMapper plantMapper, TaskRepository taskRepository, TaskService taskService){
-        this.plantRepository = plantRepository;
-        this.plantMapper = plantMapper;
-        this.taskRepository = taskRepository;
-        this.taskService = taskService;
-    }
 
     public List<Plant> findAll() {
         log.info("retrieving all plants: ");
         return plantRepository.findAll();
     }
-
+    @Transactional
     public void addPlant(CreatePlantRequestDto plantDto) {
         log.info("save plant: ");
         Plant plant = new Plant(
@@ -73,14 +67,7 @@ public class PlantService {
 
         List<TaskDto> tasks = taskService.findTasksByPlantId(plantId);
 
-        return new PlantWithTasksDto(
-                plant.getId(),
-                plant.getName(),
-                plant.getType(),
-                plant.getHealthStatus(),
-                plant.getHeight(),
-                tasks
-        );
+        return plantMapper.toPlantWithTasksDto(plant, tasks);
     }
 
     @Transactional

@@ -4,12 +4,13 @@ import com.plantbreeding.dao.PlantRepository;
 import com.plantbreeding.dao.TaskRepository;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
-import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.TaskStatus;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
 import com.plantbreeding.domain.errors.TaskNotFoundException;
 import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.infrastructure.dto.request.TaskDto;
+import com.plantbreeding.infrastructure.mapper.TaskMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
@@ -19,26 +20,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.plantbreeding.domain.enumeration.Recurrence.*;
-
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
     private final PlantRepository plantRepository;
+    private final TaskMapper taskMapper;
 
-    public TaskService(TaskRepository taskRepository, PlantRepository plantRepository) {
-        this.taskRepository = taskRepository;
-        this.plantRepository = plantRepository;
-    }
-
-    public List<Task> findAll() {
+    public List<TaskDto> findAll() {
         log.info("retrieving all tasks: ");
-        return taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+        return taskMapper.toDtoList(tasks);
     }
 
-    public List<Task> findTasksByDate(LocalDate taskDate) {
-        return taskRepository.findByTaskDate(taskDate);
+    public List<TaskDto> findTasksByDate(LocalDate taskDate) {
+        List<Task> tasks = taskRepository.findByTaskDate(taskDate);
+        List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
+        return taskDtos;
     }
 
     @Transactional

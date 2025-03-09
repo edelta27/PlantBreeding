@@ -4,6 +4,7 @@ import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enumeration.TaskStatus;
 import com.plantbreeding.domain.enumeration.TaskType;
 import com.plantbreeding.domain.service.TaskService;
+import com.plantbreeding.infrastructure.dto.request.TaskDto;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,10 +40,10 @@ class TaskRestControllerTest {
         //given
         Long taskId = 1L;
         LocalDate localDate = LocalDate.of(2024, 2, 23);
-        Task task = new Task(taskId, TaskType.WATERING, "discription", localDate, TaskStatus.OVERDUE,2L);
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(task);
-        given(taskService.findTasksByDate(localDate)).willReturn(tasks);
+        TaskDto taskDto = new TaskDto(taskId, TaskType.WATERING, "discription", localDate, TaskStatus.OVERDUE,2L);
+        List<TaskDto> taskDtos = new ArrayList<>();
+        taskDtos.add(taskDto);
+        given(taskService.findTasksByDate(localDate)).willReturn(taskDtos);
         //when //then
         RestAssuredMockMvc.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

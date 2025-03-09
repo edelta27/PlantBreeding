@@ -5,6 +5,7 @@ import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.TaskStatus;
 import com.plantbreeding.domain.service.TaskService;
 import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
+import com.plantbreeding.infrastructure.dto.request.TaskDto;
 import com.plantbreeding.infrastructure.dto.response.*;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -26,8 +27,8 @@ public class TaskRestController {
 
     @GetMapping("/daily")
     public ResponseEntity<GetAllTasksResponseDto> getTasksForDate(@RequestParam("date") LocalDate taskDate) {
-        List<Task> tasks = taskService.findTasksByDate(taskDate);
-        GetAllTasksResponseDto response = new GetAllTasksResponseDto(tasks);
+        List<TaskDto> tasksDtos = taskService.findTasksByDate(taskDate);
+        GetAllTasksResponseDto response = new GetAllTasksResponseDto(tasksDtos);
         return ResponseEntity.ok(response);
     }
 

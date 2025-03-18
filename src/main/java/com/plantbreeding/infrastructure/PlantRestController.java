@@ -3,7 +3,6 @@ package com.plantbreeding.infrastructure;
 import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.service.PlantService;
-import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
 import com.plantbreeding.infrastructure.dto.response.*;
 
@@ -48,9 +47,9 @@ public class PlantRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> postPlant(@RequestBody @Valid CreatePlantRequestDto plant){
-        plantService.addPlant(plant);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Plant added successfully");
+    public ResponseEntity<MessageResponseDto> postPlant(@RequestBody @Valid PlantDto plantDto){
+        plantService.addPlant(plantDto);
+        return ResponseEntity.ok(new MessageResponseDto("Plant added successfully", HttpStatus.OK));
     }
 
     @PatchMapping ("/{id}")
@@ -62,9 +61,9 @@ public class PlantRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeletePlantResponseDto> deletePlant(@PathVariable Long id){
+    public ResponseEntity<MessageResponseDto> deletePlant(@PathVariable Long id){
         plantService.deletePlant(id);
-        return ResponseEntity.ok(new DeletePlantResponseDto("You deleted plant with id: " + id, HttpStatus.OK));
+        return ResponseEntity.ok(new MessageResponseDto("You deleted plant with id: " + id, HttpStatus.OK));
     }
 
 }

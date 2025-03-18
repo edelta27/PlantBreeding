@@ -6,7 +6,6 @@ import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enumeration.HealthStatus;
 import com.plantbreeding.domain.enumeration.PlantType;
 import com.plantbreeding.domain.errors.PlantNotFoundException;
-import com.plantbreeding.infrastructure.dto.request.CreatePlantRequestDto;
 import com.plantbreeding.infrastructure.dto.request.PlantDto;
 import com.plantbreeding.infrastructure.dto.request.TaskDto;
 import com.plantbreeding.infrastructure.dto.response.PlantWithTasksDto;
@@ -34,7 +33,7 @@ public class PlantService {
         return plantRepository.findAll();
     }
     @Transactional
-    public void addPlant(CreatePlantRequestDto plantDto) {
+    public void addPlant(PlantDto plantDto) {
         log.info("save plant: ");
         Plant plant = plantMapper.toEntity(plantDto);
         plantRepository.save(plant);

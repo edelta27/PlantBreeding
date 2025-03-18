@@ -53,11 +53,11 @@ public class PlantRestController {
     }
 
     @PatchMapping ("/{id}")
-    public ResponseEntity<String> updatePlant(@PathVariable Long id,
+    public ResponseEntity<MessageResponseDto> updatePlant(@PathVariable Long id,
                                               @RequestParam HealthStatus healthStatus,
                                               @RequestParam Integer height) {
         plantService.updatePlantHealthAndHeight(id, healthStatus, height);
-        return ResponseEntity.ok("Plant updated successfully");
+        return ResponseEntity.ok(new MessageResponseDto("Plant updated successfully with id: " + id, HttpStatus.OK));
     }
 
     @DeleteMapping("/{id}")

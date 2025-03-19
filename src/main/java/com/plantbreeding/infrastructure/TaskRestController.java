@@ -33,16 +33,16 @@ public class TaskRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addTask(@RequestBody @Valid CreateTaskRequestDto request) {
+    public ResponseEntity<MessageResponseDto> addTask(@RequestBody @Valid CreateTaskRequestDto request) {
         taskService.createTask(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Task(s) added successfully");
+        return ResponseEntity.ok(new MessageResponseDto("Task(s) added successfully", HttpStatus.OK));
     }
 
     @PatchMapping ("/{id}")
-    public ResponseEntity<String> updateTask(@PathVariable Long id,
+    public ResponseEntity<MessageResponseDto> updateTask(@PathVariable Long id,
                                               @RequestParam TaskStatus taskStatus) {
         taskService.updateTasksStatus(id, taskStatus);
-        return ResponseEntity.ok("Task updated successfully");
+        return ResponseEntity.ok(new MessageResponseDto("Task updated successfully", HttpStatus.OK));
     }
 
 }

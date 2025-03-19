@@ -1,7 +1,7 @@
 package com.plantbreeding.domain.entity;
 
-import com.plantbreeding.domain.enumeration.ApplicationMethod;
-import com.plantbreeding.domain.enumeration.FertilizerType;
+import com.plantbreeding.domain.enums.ApplicationMethod;
+import com.plantbreeding.domain.enums.FertilizerType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

@@ -1,23 +1,5 @@
 package com.plantbreeding.domain.service;
 
-import com.plantbreeding.dao.PlantRepository;
-import com.plantbreeding.dao.TaskRepository;
-import com.plantbreeding.domain.entity.Plant;
-import com.plantbreeding.domain.entity.Task;
-import com.plantbreeding.domain.enumeration.Recurrence;
-import com.plantbreeding.domain.enumeration.TaskStatus;
-import com.plantbreeding.domain.enumeration.TaskType;
-import com.plantbreeding.infrastructure.dto.request.CreateTaskRequestDto;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 //@ExtendWith(MockitoExtension.class)
 //class TaskServiceTest {
 //

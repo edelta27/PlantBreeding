@@ -1,10 +1,11 @@
 package com.plantbreeding.infrastructure;
 
-import com.plantbreeding.domain.enumeration.HealthStatus;
-import com.plantbreeding.domain.enumeration.PlantType;
+import com.plantbreeding.domain.enums.HealthStatus;
+import com.plantbreeding.domain.enums.PlantType;
 import java.time.LocalDate;
-import com.plantbreeding.domain.service.PlantService;
-import com.plantbreeding.infrastructure.dto.request.PlantDto;
+import com.plantbreeding.service.PlantService;
+import com.plantbreeding.controller.rest.PlantRestController;
+import com.plantbreeding.dto.request.PlantDto;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

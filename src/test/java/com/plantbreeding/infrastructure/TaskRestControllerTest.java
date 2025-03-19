@@ -1,10 +1,10 @@
 package com.plantbreeding.infrastructure;
 
-import com.plantbreeding.domain.entity.Task;
-import com.plantbreeding.domain.enumeration.TaskStatus;
-import com.plantbreeding.domain.enumeration.TaskType;
-import com.plantbreeding.domain.service.TaskService;
-import com.plantbreeding.infrastructure.dto.request.TaskDto;
+import com.plantbreeding.domain.enums.TaskStatus;
+import com.plantbreeding.domain.enums.TaskType;
+import com.plantbreeding.service.TaskService;
+import com.plantbreeding.controller.rest.TaskRestController;
+import com.plantbreeding.dto.request.TaskDto;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

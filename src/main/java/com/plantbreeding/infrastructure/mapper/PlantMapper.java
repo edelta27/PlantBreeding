@@ -12,7 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PlantMapper {
     @Mapping(target = "plantType", source = "type")
-    @Mapping(target = "isAnnual", defaultValue = "false")
     PlantDto toDto(Plant plant);
     List<PlantDto> toDtoList(List<Plant> plants);
     @Mapping(target = "type", source = "plantType")

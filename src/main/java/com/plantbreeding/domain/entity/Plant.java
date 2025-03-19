@@ -128,7 +128,7 @@ public class Plant {
         return isAnnual;
     }
 
-    public void setISAnnual(Boolean isAnnual) {
+    public void setIsAnnual(Boolean isAnnual) {
         this.isAnnual = isAnnual;
     }
 

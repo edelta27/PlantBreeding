@@ -1,6 +1,6 @@
 package com.plantbreeding.apivalidation;
 
-import com.plantbreeding.infrastructure.PlantRestController;
+import com.plantbreeding.controller.rest.PlantRestController;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

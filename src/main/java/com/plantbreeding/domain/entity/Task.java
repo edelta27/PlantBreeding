@@ -1,7 +1,7 @@
 package com.plantbreeding.domain.entity;
 
-import com.plantbreeding.domain.enumeration.TaskStatus;
-import com.plantbreeding.domain.enumeration.TaskType;
+import com.plantbreeding.domain.enums.TaskStatus;
+import com.plantbreeding.domain.enums.TaskType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

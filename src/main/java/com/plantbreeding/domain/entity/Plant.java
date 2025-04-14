@@ -1,10 +1,8 @@
 package com.plantbreeding.domain.entity;
 
-import com.plantbreeding.domain.enumeration.HealthStatus;
-import com.plantbreeding.domain.enumeration.PlantType;
+import com.plantbreeding.domain.enums.HealthStatus;
+import com.plantbreeding.domain.enums.PlantType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -124,12 +122,12 @@ public class Plant {
         this.healthStatus = healthStatus;
     }
 
-    public Boolean getAnnual() {
+    public Boolean getIsAnnual() {
         return isAnnual;
     }
 
-    public void setAnnual(Boolean annual) {
-        isAnnual = annual;
+    public void setIsAnnual(Boolean isAnnual) {
+        this.isAnnual = isAnnual;
     }
 
     public String getDescription() {

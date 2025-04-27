@@ -29,7 +29,7 @@ public class PlantServiceImpl implements PlantService {
     private final PlantMapper plantMapper;
     private final TaskRepository taskRepository;
     private final TaskService taskService;
-@Override
+    @Override
     public List<Plant> findAll() {
         log.info("retrieving all plants: ");
         return plantRepository.findAll();

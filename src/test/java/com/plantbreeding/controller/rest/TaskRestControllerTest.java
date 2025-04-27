@@ -1,9 +1,8 @@
-package com.plantbreeding.infrastructure;
+package com.plantbreeding.controller.rest;
 
 import com.plantbreeding.domain.enums.TaskStatus;
 import com.plantbreeding.domain.enums.TaskType;
 import com.plantbreeding.service.TaskService;
-import com.plantbreeding.controller.rest.TaskRestController;
 import com.plantbreeding.dto.request.TaskDto;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +55,8 @@ class TaskRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("tasks[0].id", equalTo(taskId.intValue()))
                 .body("tasks[0].notes", equalTo("discription"))
-                .body("tasks[0].status", equalTo("OVERDUE"));
+                .body("tasks[0].status", equalTo("OVERDUE"))
+                .body("tasks[0].taskType", equalTo("WATERING"))
+                .body("tasks[0].plantId", equalTo(2));
     }
 }

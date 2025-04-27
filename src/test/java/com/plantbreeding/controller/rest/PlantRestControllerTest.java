@@ -1,10 +1,9 @@
-package com.plantbreeding.infrastructure;
+package com.plantbreeding.controller.rest;
 
 import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
 import java.time.LocalDate;
 import com.plantbreeding.service.PlantService;
-import com.plantbreeding.controller.rest.PlantRestController;
 import com.plantbreeding.dto.request.PlantDto;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +48,11 @@ class PlantRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("id", equalTo(plantId.intValue()))
                 .body("name", equalTo("Rose"))
-                .body("description", equalTo("small flower"));
+                .body("description", equalTo("small flower"))
+                .body("plantType", equalTo("FLOWER"))
+                .body("healthStatus", equalTo("HEALTHY"))
+                .body("isAnnual", equalTo(true))
+                .body("height", equalTo(2));
     }
 
 }

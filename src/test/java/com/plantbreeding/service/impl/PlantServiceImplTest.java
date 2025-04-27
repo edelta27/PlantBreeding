@@ -13,14 +13,15 @@ import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
 import com.plantbreeding.mapper.PlantMapper;
 import com.plantbreeding.service.TaskService;
-import com.plantbreeding.service.impl.PlantServiceImpl;
 import com.plantbreeding.exception.PlantNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +29,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-
+@ExtendWith(MockitoExtension.class)
 class PlantServiceImplTest {
     @Mock
     private PlantRepository plantRepository;

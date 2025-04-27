@@ -1,33 +1,9 @@
 package com.plantbreeding.service;
 
-import com.plantbreeding.repository.FertilizerRepository;
-import com.plantbreeding.domain.entity.Fertilizer;
 import com.plantbreeding.dto.request.FertilizerDto;
 import com.plantbreeding.dto.response.GetAllFertilizerResponseDto;
-import com.plantbreeding.mapper.FertilizerMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-@Service
-@Log4j2
-@RequiredArgsConstructor
-public class FertilizerService {
-    private final FertilizerRepository fertilizerRepository;
-    private final FertilizerMapper fertilizerMapper;
-
-    public GetAllFertilizerResponseDto getAllFertilizers() {
-        List<Fertilizer> fertilizers = fertilizerRepository.findAll();
-        List<FertilizerDto> fertilizersDtos = fertilizerMapper.toDtoList(fertilizers);
-        return new GetAllFertilizerResponseDto(fertilizersDtos);
-    }
-    @Transactional
-    public void addFertilizer(FertilizerDto fertilizerDto) {
-        log.info("save fertilizer: ");
-        Fertilizer fertilizer = fertilizerMapper.toEntity(fertilizerDto);
-        fertilizerRepository.save(fertilizer);
-    }
+public interface FertilizerService {
+    GetAllFertilizerResponseDto getAllFertilizers();
+    void addFertilizer(FertilizerDto fertilizerDto);
 }

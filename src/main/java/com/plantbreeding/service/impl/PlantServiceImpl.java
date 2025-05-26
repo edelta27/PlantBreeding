@@ -8,6 +8,7 @@ import com.plantbreeding.dto.request.TaskDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
 import com.plantbreeding.exception.PlantNotFoundException;
 import com.plantbreeding.mapper.PlantMapper;
+import com.plantbreeding.mapper.TaskMapper;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
 import com.plantbreeding.service.PlantService;
@@ -27,6 +28,7 @@ import java.util.List;
 public class PlantServiceImpl implements PlantService {
     private final PlantRepository plantRepository;
     private final PlantMapper plantMapper;
+    private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
     private final TaskService taskService;
     @Override
@@ -59,9 +61,7 @@ public class PlantServiceImpl implements PlantService {
         Plant plant = plantRepository.findById(plantId)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id " + plantId + " not found"));
 
-        List<TaskDto> tasks = taskService.findTasksByPlantId(plantId);
-
-        return plantMapper.toPlantWithTasksDto(plant, tasks);
+        return plantMapper.toPlantWithTasksDto(plant, taskMapper.toDtoList(plant.getTasks()));
     }
     @Override
     @Transactional

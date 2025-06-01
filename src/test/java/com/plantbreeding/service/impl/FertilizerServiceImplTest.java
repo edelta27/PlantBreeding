@@ -1,6 +1,6 @@
 package com.plantbreeding.service.impl;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.plantbreeding.repository.FertilizerRepository;
 import com.plantbreeding.domain.entity.Fertilizer;
@@ -10,17 +10,16 @@ import com.plantbreeding.dto.request.FertilizerDto;
 import com.plantbreeding.dto.response.GetAllFertilizerResponseDto;
 import com.plantbreeding.mapper.FertilizerMapper;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class FertilizerServiceImplTest {
 
@@ -33,45 +32,43 @@ class FertilizerServiceImplTest {
     @InjectMocks
     private FertilizerServiceImpl fertilizerService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void shouldReturnAllFertilizers() {
         // given
-        Fertilizer fertilizer = new Fertilizer();
-        List<Fertilizer> fertilizers = List.of(fertilizer);
+        Fertilizer fertilizer = new Fertilizer(1L, "BioGrow", FertilizerType.ORGANIC, ApplicationMethod.GRANULATED, "Use weekly");
+        List<Fertilizer> fertilizerList = List.of(fertilizer);
 
-        FertilizerDto fertilizerDto = new FertilizerDto(1L, "BioFertilizer", FertilizerType.ORGANIC, ApplicationMethod.GRANULATED, "Natural fertilizer");
-        List<FertilizerDto> fertilizerDtos = List.of(fertilizerDto);
+        FertilizerDto dto = new FertilizerDto(1L, "BioGrow", FertilizerType.ORGANIC, ApplicationMethod.GRANULATED, "Use weekly");
+        List<FertilizerDto> dtoList = List.of(dto);
 
-        given(fertilizerRepository.findAll()).willReturn(fertilizers);
-        given(fertilizerMapper.toDtoList(fertilizers)).willReturn(fertilizerDtos);
+        when(fertilizerRepository.findAll()).thenReturn(fertilizerList);
+        when(fertilizerMapper.toDtoList(fertilizerList)).thenReturn(dtoList);
 
         // when
         GetAllFertilizerResponseDto response = fertilizerService.getAllFertilizers();
 
         // then
-        assertThat(response).isNotNull();
-        assertThat(response.fertilizersDto()).hasSize(1);
-        assertThat(response.fertilizersDto().get(0).name()).isEqualTo("BioFertilizer");
+        assertNotNull(response);
+        assertEquals(1, response.fertilizersDto().size());
+        assertEquals(dto, response.fertilizersDto().get(0));
+
+        verify(fertilizerRepository, times(1)).findAll();
+        verify(fertilizerMapper, times(1)).toDtoList(fertilizerList);
     }
 
     @Test
     void shouldAddFertilizer() {
         // given
-        FertilizerDto fertilizerDto = new FertilizerDto(1L, "OrganicGrow", FertilizerType.ORGANIC, ApplicationMethod.GRANULATED, "Best fertilizer");
-        Fertilizer fertilizer = new Fertilizer();
+        FertilizerDto dto = new FertilizerDto(null, "GreenPlus", FertilizerType.MINERAL, ApplicationMethod.WATER_SOLUBLE, "Mix with water");
+        Fertilizer entity = new Fertilizer("GreenPlus", FertilizerType.MINERAL, ApplicationMethod.WATER_SOLUBLE, "Mix with water");
 
-        given(fertilizerMapper.toEntity(fertilizerDto)).willReturn(fertilizer);
+        when(fertilizerMapper.toEntity(dto)).thenReturn(entity);
 
         // when
-        fertilizerService.addFertilizer(fertilizerDto);
+        fertilizerService.addFertilizer(dto);
 
         // then
-        verify(fertilizerMapper).toEntity(fertilizerDto);
-        verify(fertilizerRepository).save(fertilizer);
+        verify(fertilizerMapper, times(1)).toEntity(dto);
+        verify(fertilizerRepository, times(1)).save(entity);
     }
 }

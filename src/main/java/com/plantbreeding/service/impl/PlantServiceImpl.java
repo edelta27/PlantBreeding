@@ -61,7 +61,7 @@ public class PlantServiceImpl implements PlantService {
         Plant plant = plantRepository.findById(plantId)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id " + plantId + " not found"));
 
-        return plantMapper.toPlantWithTasksDto(plant, taskMapper.toDtoList(plant.getTasks()));
+        return plantMapper.toPlantWithTasksDto(plant);
     }
     @Override
     @Transactional
@@ -83,7 +83,6 @@ public class PlantServiceImpl implements PlantService {
     public void deletePlant(Long id) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new PlantNotFoundException("Plant with id" + id + " not found"));
-        taskRepository.deleteByPlantId(id);
         plantRepository.deleteById(id);
     }
 }

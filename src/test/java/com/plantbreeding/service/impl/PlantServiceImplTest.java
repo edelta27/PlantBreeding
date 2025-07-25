@@ -1,8 +1,10 @@
 package com.plantbreeding.service.impl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
@@ -43,23 +45,28 @@ class PlantServiceImplTest {
     @InjectMocks
     private PlantServiceImpl plantService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void shouldFindAllPlants() {
         // given
-        Plant plant = new Plant();
-        given(plantRepository.findAll()).willReturn(List.of(plant));
+        Plant plant = new Plant("Tomato",
+                                PlantType.VEGETABLE,
+                                LocalDate.parse("2025-02-25"),
+                                HealthStatus.HEALTHY,
+                                true,
+                                "A juicy tomato plant.",
+                                50);
+        List<Plant> plantList = List.of(plant);
+
+        when(plantRepository.findAll()).thenReturn(plantList);
 
         // when
         List<Plant> result = plantService.findAll();
 
         // then
-        assertThat(result).hasSize(1);
-        verify(plantRepository).findAll();
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Tomato", result.get(0).getName());
+        verify(plantRepository, times(1)).findAll();
     }
 
     @Test
@@ -138,7 +145,7 @@ class PlantServiceImplTest {
 
         given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
         given(taskService.findTasksByPlantId(plantId)).willReturn(List.of());
-        given(plantMapper.toPlantWithTasksDto(plant, List.of())).willReturn(plantWithTasksDto);
+        given(plantMapper.toPlantWithTasksDto(plant));
 
         // when
         PlantWithTasksDto result = plantService.getPlantWithTasks(plantId);

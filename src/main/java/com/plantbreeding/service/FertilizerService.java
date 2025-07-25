@@ -1,9 +1,10 @@
 package com.plantbreeding.service;
 
 import com.plantbreeding.dto.request.FertilizerDto;
-import com.plantbreeding.dto.response.GetAllFertilizerResponseDto;
+
+import java.util.List;
 
 public interface FertilizerService {
-    GetAllFertilizerResponseDto getAllFertilizers();
+    List<FertilizerDto> getAllFertilizers();
     void addFertilizer(FertilizerDto fertilizerDto);
 }

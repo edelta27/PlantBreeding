@@ -2,7 +2,6 @@ package com.plantbreeding.service.impl;
 
 import com.plantbreeding.domain.entity.Fertilizer;
 import com.plantbreeding.dto.request.FertilizerDto;
-import com.plantbreeding.dto.response.GetAllFertilizerResponseDto;
 import com.plantbreeding.mapper.FertilizerMapper;
 import com.plantbreeding.repository.FertilizerRepository;
 import com.plantbreeding.service.FertilizerService;
@@ -21,10 +20,9 @@ public class FertilizerServiceImpl implements FertilizerService {
     private final FertilizerMapper fertilizerMapper;
 
     @Override
-    public GetAllFertilizerResponseDto getAllFertilizers() {
+    public List<FertilizerDto> getAllFertilizers() {
         List<Fertilizer> fertilizers = fertilizerRepository.findAll();
-        List<FertilizerDto> fertilizersDtos = fertilizerMapper.toDtoList(fertilizers);
-        return new GetAllFertilizerResponseDto(fertilizersDtos);
+        return fertilizerMapper.toDtoList(fertilizers);
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
 import com.plantbreeding.dto.request.PlantDto;
-import com.plantbreeding.dto.request.TaskDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
 import com.plantbreeding.exception.PlantNotFoundException;
 import com.plantbreeding.mapper.PlantMapper;
@@ -28,9 +27,7 @@ import java.util.List;
 public class PlantServiceImpl implements PlantService {
     private final PlantRepository plantRepository;
     private final PlantMapper plantMapper;
-    private final TaskMapper taskMapper;
-    private final TaskRepository taskRepository;
-    private final TaskService taskService;
+
     @Override
     public List<Plant> findAll() {
         log.info("retrieving all plants: ");

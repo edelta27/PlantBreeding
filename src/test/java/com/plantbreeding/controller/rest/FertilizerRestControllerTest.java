@@ -3,7 +3,6 @@ package com.plantbreeding.controller.rest;
 import com.plantbreeding.domain.enums.ApplicationMethod;
 import com.plantbreeding.domain.enums.FertilizerType;
 import com.plantbreeding.dto.request.FertilizerDto;
-import com.plantbreeding.dto.response.GetAllFertilizerResponseDto;
 import com.plantbreeding.service.FertilizerService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +39,7 @@ class FertilizerRestControllerTest {
                 "Natural fertilizer"
         );
         List<FertilizerDto> fertilizers = List.of(fertilizerDto);
-        given(fertilizerService.getAllFertilizers()).willReturn(new GetAllFertilizerResponseDto(fertilizers));
+        given(fertilizerService.getAllFertilizers()).willReturn(fertilizers);
 
         // when // then
         RestAssuredMockMvc.given()

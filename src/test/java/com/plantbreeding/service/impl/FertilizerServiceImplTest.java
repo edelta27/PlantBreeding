@@ -7,7 +7,6 @@ import com.plantbreeding.domain.entity.Fertilizer;
 import com.plantbreeding.domain.enums.ApplicationMethod;
 import com.plantbreeding.domain.enums.FertilizerType;
 import com.plantbreeding.dto.request.FertilizerDto;
-import com.plantbreeding.dto.response.GetAllFertilizerResponseDto;
 import com.plantbreeding.mapper.FertilizerMapper;
 
 import org.junit.jupiter.api.Test;
@@ -45,12 +44,12 @@ class FertilizerServiceImplTest {
         when(fertilizerMapper.toDtoList(fertilizerList)).thenReturn(dtoList);
 
         // when
-        GetAllFertilizerResponseDto response = fertilizerService.getAllFertilizers();
+        List<FertilizerDto> response = fertilizerService.getAllFertilizers();
 
         // then
         assertNotNull(response);
-        assertEquals(1, response.fertilizersDto().size());
-        assertEquals(dto, response.fertilizersDto().get(0));
+        assertEquals(1, response.size());
+        assertEquals(dto, response.get(0));
 
         verify(fertilizerRepository, times(1)).findAll();
         verify(fertilizerMapper, times(1)).toDtoList(fertilizerList);

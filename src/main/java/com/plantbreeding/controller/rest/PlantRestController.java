@@ -4,7 +4,6 @@ import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
 import com.plantbreeding.service.PlantService;
 import com.plantbreeding.dto.request.PlantDto;
-import com.plantbreeding.dto.response.GetAllPlantsResponseDto;
 import com.plantbreeding.dto.response.MessageResponseDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
 
@@ -27,13 +26,12 @@ public class PlantRestController {
     }
 
     @GetMapping()
-    public ResponseEntity<GetAllPlantsResponseDto> getAllPlants(@RequestParam(required = false) Integer limit,
+    public ResponseEntity<List<PlantDto>> getAllPlants(@RequestParam(required = false) Integer limit,
                                                                 @RequestParam(required = false) Boolean isAnnual,
                                                                 @RequestParam(required = false) PlantType type){
         int actualLimit = (limit != null) ? limit : Integer.MAX_VALUE;
         List<PlantDto> filteredPlants = plantService.findFilteredPlants(isAnnual, type, actualLimit);
-        GetAllPlantsResponseDto response = new GetAllPlantsResponseDto(filteredPlants);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(filteredPlants);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -11,6 +11,7 @@ import com.plantbreeding.mapper.TaskMapper;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
 import com.plantbreeding.service.TaskService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -70,27 +71,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public List<TaskDto> findTasksByPlantId(Long plantId) {
-        return taskRepository.findByPlantId(plantId)
-                .stream()
-                .map(task -> new TaskDto(
-                        task.getId(),
-                        task.getTaskType(),
-                        task.getNotes(),
-                        task.getTaskDate(),
-                        task.getStatus(),
-                        task.getPlant().getId()
-                ))
-                .toList();
+        List<Task> tasks = taskRepository.findByPlantId(plantId);
+        List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
+        return taskDtos;
     }
 
     @Transactional
-    public void updateTasksStatus(Long id, TaskStatus taskStatus) {
+    public void updateTasksStatus(Long id, @NonNull TaskStatus taskStatus) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
-
-        if (taskStatus != null) {
-            task.setStatus(taskStatus);
-        }
+        task.setStatus(taskStatus);
         taskRepository.save(task);
     }
 

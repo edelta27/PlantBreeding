@@ -12,10 +12,12 @@ import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
 import com.plantbreeding.service.PlantService;
 import com.plantbreeding.service.TaskService;
+import com.plantbreeding.specification.PlantSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +45,12 @@ public class PlantServiceImpl implements PlantService {
     @Override
     public List<PlantDto> findFilteredPlants(Boolean isAnnual, PlantType type, int limit) {
         Pageable pageable = PageRequest.of(0, limit);
-        List<Plant> plants = plantRepository.findFilteredPlants(isAnnual, type, pageable);
-        List<PlantDto> plantDtos = plantMapper.toDtoList(plants);
-        return plantDtos;
+
+        Specification<Plant> spec = Specification
+                .where(PlantSpecifications.hasIsAnnual(isAnnual))
+                .and(PlantSpecifications.hasType(type));
+        List<Plant> plants = plantRepository.findAll(spec, pageable).getContent();
+        return plantMapper.toDtoList(plants);
     }
     @Override
     public PlantDto getPlantById(Long id) {

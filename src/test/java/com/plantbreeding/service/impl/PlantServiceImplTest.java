@@ -6,6 +6,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+import com.plantbreeding.domain.entity.Task;
+import com.plantbreeding.domain.enums.TaskStatus;
+import com.plantbreeding.domain.enums.TaskType;
+import com.plantbreeding.dto.request.TaskDto;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
 import com.plantbreeding.domain.entity.Plant;
@@ -24,8 +28,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -95,7 +102,8 @@ class PlantServiceImplTest {
         Plant plant = new Plant();
         PlantDto plantDto = new PlantDto(1L, "Tulip", PlantType.FLOWER, LocalDate.now(), HealthStatus.HEALTHY, true, "yellow flower", 15);
 
-        given(plantRepository.findFilteredPlants(isAnnual, type, pageable)).willReturn(List.of(plant));
+        Page<Plant> page = new PageImpl<>(List.of(plant));
+        given(plantRepository.findAll(any(Specification.class), eq(pageable))).willReturn(page);
         given(plantMapper.toDtoList(List.of(plant))).willReturn(List.of(plantDto));
 
         // when
@@ -139,20 +147,30 @@ class PlantServiceImplTest {
     @Test
     void shouldGetPlantWithTasks() {
         // given
+        LocalDate localDate = LocalDate.of(2025,3,1) ;
         Long plantId = 1L;
-        Plant plant = new Plant();
-        PlantWithTasksDto plantWithTasksDto = new PlantWithTasksDto(plantId, "Tulip", PlantType.FLOWER, HealthStatus.HEALTHY,20, List.of());
+        Plant plant = new Plant("Tulip", PlantType.FLOWER, LocalDate.of(2024,3,1),HealthStatus.HEALTHY, true, "Test description",25);
+        plant.setId(plantId);
+        Task task = new Task(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE,1L );
+        task.setPlant(plant);
+        plant.setTasks(List.of(task));
+
+        PlantWithTasksDto plantWithTasksDto = new PlantWithTasksDto(plantId, "Tulip", PlantType.FLOWER, HealthStatus.HEALTHY,20, List.of(new TaskDto(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE,1L )));
 
         given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
-        given(taskService.findTasksByPlantId(plantId)).willReturn(List.of());
-        given(plantMapper.toPlantWithTasksDto(plant));
+        given(plantMapper.toPlantWithTasksDto(plant)).willReturn(plantWithTasksDto);
 
         // when
         PlantWithTasksDto result = plantService.getPlantWithTasks(plantId);
 
         // then
         assertThat(result.id()).isEqualTo(plantId);
-        verify(taskService).findTasksByPlantId(plantId);
+        assertThat(result.name()).isEqualTo("Tulip");
+        assertThat(result.type()).isEqualTo(PlantType.FLOWER);
+        assertThat(result.tasks().get(0).notes()).isEqualTo("Water me");
+        assertThat(result.tasks()).hasSize(1);
+        assertThat(result.tasks().get(0).taskType()).isEqualTo(TaskType.WATERING);
+        assertThat(result.tasks().get(0).taskDate()).isEqualTo(localDate);
     }
 
     @Test
@@ -187,7 +205,6 @@ class PlantServiceImplTest {
         plantService.deletePlant(plantId);
 
         // then
-        verify(taskRepository).deleteByPlantId(plantId);
         verify(plantRepository).deleteById(plantId);
     }
 }

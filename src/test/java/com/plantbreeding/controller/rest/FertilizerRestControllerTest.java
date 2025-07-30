@@ -49,10 +49,9 @@ class FertilizerRestControllerTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("fertilizers[0].id", equalTo(1))
-                .body("fertilizers[0].name", equalTo("BioFertilizer"))
-                .body("fertilizers[0].type", equalTo("ORGANIC"))
-                .body("fertilizers[0].usageRecommendations", equalTo("Natural fertilizer"))
-                .body("fertilizers[0].applicationMethod", equalTo("GRANULATED"));
+                .body("[0].name", equalTo("BioFertilizer"))
+                .body("[0].type", equalTo("ORGANIC"))
+                .body("[0].usageRecommendations", equalTo("Natural fertilizer"))
+                .body("[0].applicationMethod", equalTo("GRANULATED"));
     }
 }

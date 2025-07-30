@@ -1,4 +1,4 @@
-package com.plantbreeding.controller;
+package com.plantbreeding.controller.rest;
 
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enums.HealthStatus;
@@ -11,10 +11,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -30,6 +33,17 @@ class PlantRestControllerIntegrationTest {
     @Autowired
     private PlantRepository plantRepository;
 
+    @Autowired
+    private Environment environment;
+
+    @Test
+    void printActiveProfile() {
+        System.out.println(">>> Active profile: " + Arrays.toString(environment.getActiveProfiles()));
+    }
+    @BeforeEach
+    void checkProfile() {
+        System.out.println("Aktywny profil: " + System.getProperty("spring.profiles.active"));
+    }
     @BeforeEach
     void setUp() {
         plantRepository.deleteAll();

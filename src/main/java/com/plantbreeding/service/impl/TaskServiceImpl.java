@@ -44,29 +44,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     public void createTask(CreateTaskRequestDto request) {
-        Plant plant = plantRepository.findById(request.plantId())
-                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + request.plantId() + " not found"));
-
-        LocalDate currentDate = request.startDate();
-        List<Task> tasks = new ArrayList<>();
-
-        while (!currentDate.isAfter(request.endDate())) {
-            Task task = new Task();
-            task.setPlant(plant);
-            task.setTaskType(request.taskType());
-            task.setTaskDate(currentDate);
-            task.setStatus(TaskStatus.SCHEDULED);
-
-            String note = "Recurring task scheduled on " + LocalDate.now();
-            task.setNotes(request.notes() != null ? request.notes() + " | " + note : note);
-            tasks.add(task);
-
-            switch (request.recurrence()) {
-                case DAILY -> currentDate = currentDate.plusDays(1);
-                case WEEKLY -> currentDate = currentDate.plusWeeks(1);
-                case MONTHLY -> currentDate = currentDate.plusMonths(1);
-            }
-        }
+        Plant plant = findPlantById(request.plantId());
+        List<Task> tasks = generateRecurringTasks(request, plant);
         taskRepository.saveAll(tasks);
     }
 
@@ -95,5 +74,35 @@ public class TaskServiceImpl implements TaskService {
             taskRepository.saveAll(overdueTasks);
             log.info("Updated {} tasks on OVERDUE", overdueTasks.size());
         }
+    }
+
+    private Plant findPlantById(Long plantId) {
+        return plantRepository.findById(plantId)
+                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + plantId + " not found"));
+    }
+
+    private List<Task> generateRecurringTasks(CreateTaskRequestDto request, Plant plant) {
+        LocalDate currentDate = request.startDate();
+        List<Task> tasks = new ArrayList<>();
+
+        while (!currentDate.isAfter(request.endDate())) {
+            Task task = new Task();
+            task.setPlant(plant);
+            task.setTaskType(request.taskType());
+            task.setTaskDate(currentDate);
+            task.setStatus(TaskStatus.SCHEDULED);
+
+            String note = "Recurring task scheduled on " + LocalDate.now();
+            task.setNotes(request.notes() != null ? request.notes() + " | " + note : note);
+            tasks.add(task);
+
+            switch (request.recurrence()) {
+                case DAILY -> currentDate = currentDate.plusDays(1);
+                case WEEKLY -> currentDate = currentDate.plusWeeks(1);
+                case MONTHLY -> currentDate = currentDate.plusMonths(1);
+            }
+        }
+
+        return tasks;
     }
 }

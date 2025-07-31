@@ -53,10 +53,10 @@ class TaskRestControllerTest {
                 .log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("tasks[0].id", equalTo(taskId.intValue()))
-                .body("tasks[0].notes", equalTo("discription"))
-                .body("tasks[0].status", equalTo("OVERDUE"))
-                .body("tasks[0].taskType", equalTo("WATERING"))
-                .body("tasks[0].plantId", equalTo(2));
+                .body("[0].id", equalTo(taskId.intValue()))
+                .body("[0].notes", equalTo("discription"))
+                .body("[0].status", equalTo("OVERDUE"))
+                .body("[0].taskType", equalTo("WATERING"))
+                .body("[0].plantId", equalTo(2));
     }
 }

@@ -5,9 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
-import com.plantbreeding.domain.enums.Recurrence;
-import com.plantbreeding.domain.enums.TaskStatus;
-import com.plantbreeding.domain.enums.TaskType;
+import com.plantbreeding.domain.enums.*;
 import com.plantbreeding.exception.TaskNotFoundException;
 import com.plantbreeding.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.dto.request.TaskDto;
@@ -100,18 +98,18 @@ class TaskServiceImplTest {
     @Test
     void shouldFindTasksByPlantId() {
         // given
+        LocalDate localDate = LocalDate.of(2025,3,1) ;
         Long plantId = 1L;
-        Task task = new Task();
-        Plant plant = new Plant();
+        Plant plant = new Plant("Tulip", PlantType.FLOWER, LocalDate.of(2024,3,1), HealthStatus.HEALTHY, true, "Test description",25);
         plant.setId(plantId);
+        Task task = new Task(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE,1L );
         task.setPlant(plant);
-        task.setId(2L);
-        task.setTaskType(TaskType.WATERING);
-        task.setNotes("Water the plant");
-        task.setTaskDate(LocalDate.now());
-        task.setStatus(TaskStatus.SCHEDULED);
+        plant.setTasks(List.of(task));
 
         given(taskRepository.findByPlantId(plantId)).willReturn(List.of(task));
+        given(taskMapper.toDtoList(List.of(task))).willReturn(
+                List.of(new TaskDto(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE, plantId))
+        );
 
         // when
         List<TaskDto> result = taskService.findTasksByPlantId(plantId);

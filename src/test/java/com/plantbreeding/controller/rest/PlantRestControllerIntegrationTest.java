@@ -2,14 +2,10 @@ package com.plantbreeding.controller.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plantbreeding.domain.entity.Plant;
-import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
-import com.plantbreeding.domain.enums.TaskStatus;
-import com.plantbreeding.domain.enums.TaskType;
 import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.repository.PlantRepository;
-import com.plantbreeding.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +17,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,14 +39,20 @@ class PlantRestControllerIntegrationTest {
     private PlantRepository plantRepository;
 
     @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Test
+    void shouldConnectToH2Database() throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            assertThat(conn.isValid(1)).isTrue();
+        }
+    }
     @Test
     void printActiveProfile() {
         System.out.println(">>> Active profile: " + Arrays.toString(environment.getActiveProfiles()));
@@ -63,9 +66,7 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldReturnAllPlants() throws Exception {
         // given
-        plantRepository.deleteAll();
-        Plant plant = new Plant("Tulip", PlantType.FLOWER, LocalDate.of(2024, 3, 1), HealthStatus.HEALTHY, true, "Test", 25);
-        plantRepository.save(plant);
+
 
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.get("/plants")
@@ -80,10 +81,9 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldReturnPlantById() throws Exception {
         // given
-        Plant plant = new Plant("Tulip", PlantType.FLOWER, LocalDate.of(2024, 3, 1), HealthStatus.HEALTHY, true, "Test", 25);
-        plantRepository.save(plant);
+
         // when + then
-        mockMvc.perform(MockMvcRequestBuilders.get("/plants/{id}", plant.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/plants/{id}", 1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Tulip"))
@@ -103,24 +103,10 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldReturnPlantWithTasks() throws Exception {
         // given
-        plantRepository.deleteAll();
-        Plant plant = new Plant();
-        plant.setName("Tulip");
-        plant.setType(PlantType.FLOWER);
-        plant.setHealthStatus(HealthStatus.HEALTHY);
-        plant.setIsAnnual(true);
-        plant.setHeight(25);
-        plant.setPlantingDate(LocalDate.of(2024, 3, 1));
-        plant.setDescription("Test description");
 
-        plantRepository.save(plant);
-
-        Task task = new Task(null, TaskType.WATERING, "Water me", LocalDate.of(2025, 3, 1), TaskStatus.OVERDUE, plant.getId());
-        task.setPlant(plant);
-        taskRepository.save(task);
 
         // when + then
-        mockMvc.perform(MockMvcRequestBuilders.get("/plants/{id}/tasks", plant.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/plants/{id}/tasks", 1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Tulip"))
@@ -159,37 +145,34 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldUpdatePlantSickAndHeight() throws Exception {
         // given
-        Plant plant = new Plant("Tulip", PlantType.FLOWER, LocalDate.of(2024, 3, 1), HealthStatus.HEALTHY, true, "Test", 25);
-        plantRepository.save(plant);
-        HealthStatus newHealthStatus = HealthStatus.SICK;
+
         int newHeight = 45;
 
         // when + then
-        mockMvc.perform(MockMvcRequestBuilders.patch("/plants/{id}", plant.getId())
-                        .param("healthStatus", newHealthStatus.name())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/plants/{id}", 1)
+                        .param("healthStatus", "SICK")
                         .param("height", String.valueOf(newHeight)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Plant updated successfully with id: " + plant.getId()));
+                .andExpect(jsonPath("$.message").value("Plant updated successfully with id: " + 1));
 
-        Optional<Plant> updatedPlant = plantRepository.findById(plant.getId());
+        Optional<Plant> updatedPlant = plantRepository.findById(1L);
         assertThat(updatedPlant).isPresent();
-        assertThat(updatedPlant.get().getHealthStatus()).isEqualTo(newHealthStatus);
+        assertThat(updatedPlant.get().getHealthStatus()).isEqualTo(HealthStatus.SICK);
         assertThat(updatedPlant.get().getHeight()).isEqualTo(newHeight);
     }
 
     @Test
     void shouldDeletePlantById() throws Exception {
         // given
-        Plant plant = new Plant("Tulip", PlantType.FLOWER, LocalDate.of(2024, 3, 1), HealthStatus.HEALTHY, true, "Test", 25);
-        plantRepository.save(plant);
-        assertThat(plantRepository.findById(plant.getId())).isPresent();
+
+        assertThat(plantRepository.findById(1L)).isPresent();
 
         // when + then
-        mockMvc.perform(MockMvcRequestBuilders.delete("/plants/{id}", plant.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/plants/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("You deleted plant with id: " + plant.getId()));
+                .andExpect(jsonPath("$.message").value("You deleted plant with id: " + 1));
 
-        assertThat(plantRepository.findById(plant.getId())).isNotPresent();
+        assertThat(plantRepository.findById(1L)).isNotPresent();
     }
 
 }

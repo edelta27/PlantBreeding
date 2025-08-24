@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing fertilizers.
+ * Provides endpoints for retrieving and adding.
+ */
 
 @RestController
 @RequestMapping("/fertilizers")
@@ -21,15 +25,26 @@ public class FertilizerRestController {
         this.fertilizerService = fertilizerService;
     }
 
+    /**
+     * Retrieves all fertilizers.
+     *
+     * @return a list of all available fertilizers
+     */
     @GetMapping()
     public ResponseEntity<List<FertilizerDto>> getAllFertilizer(){
         List<FertilizerDto> response = fertilizerService.getAllFertilizers();
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Adds a new fertilizer.
+     *
+     * @param fertilizerDto the fertilizer details
+     * @return the created fertilizer
+     */
     @PostMapping()
-    public ResponseEntity<String> postFertilizer(@RequestBody @Valid FertilizerDto fertilizer){
-        fertilizerService.addFertilizer(fertilizer);
+    public ResponseEntity<String> postFertilizer(@RequestBody @Valid FertilizerDto fertilizerDto){
+        fertilizerService.addFertilizer(fertilizerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Fertilizer added successfully");
     }
 

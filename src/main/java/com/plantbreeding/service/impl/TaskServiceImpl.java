@@ -22,6 +22,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service implementation for managing tasks.
+ * Handles business logic for CRUD operations on tasks.
+ */
 @Service
 @Log4j2
 @RequiredArgsConstructor
@@ -30,18 +34,35 @@ public class TaskServiceImpl implements TaskService {
     private final PlantRepository plantRepository;
     private final TaskMapper taskMapper;
 
+    /**
+     * Retrieves all tasks from the database.
+     *
+     * @return a list of tasks
+     */
     public List<TaskDto> findAll() {
         log.info("retrieving all tasks: ");
         List<Task> tasks = taskRepository.findAll();
         return taskMapper.toDtoList(tasks);
     }
 
+    /**
+     * Retrieves a list of tasks based on provided filtering criteria.
+     *
+     * @param taskDate   optional task in date
+     * @return a list of tasks matching the specified filters
+     */
     public List<TaskDto> findTasksByDate(LocalDate taskDate) {
         List<Task> tasks = taskRepository.findByTaskDate(taskDate);
         List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
         return taskDtos;
     }
 
+    /**
+     * Creates a new task associated with a specific plant.
+     *
+     * @param request the task data to be saved
+     * @return the saved task DTO
+     */
     @Transactional
     public void createTask(CreateTaskRequestDto request) {
         Plant plant = findPlantById(request.plantId());
@@ -49,12 +70,25 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.saveAll(tasks);
     }
 
+    /**
+     * Retrieves all tasks for a given plant ID.
+     *
+     * @param plantId the ID of the plant
+     * @return a list of tasks associated with the plant
+     */
     public List<TaskDto> findTasksByPlantId(Long plantId) {
         List<Task> tasks = taskRepository.findByPlantId(plantId);
         List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
         return taskDtos;
     }
 
+    /**
+     * Updates the status of an existing task.
+     *
+     * @param id the ID of the task to update
+     * @param taskStatus the new task status
+     * @return the updated task DTO
+     */
     @Transactional
     public void updateTasksStatus(Long id, @NonNull TaskStatus taskStatus) {
         Task task = taskRepository.findById(id)

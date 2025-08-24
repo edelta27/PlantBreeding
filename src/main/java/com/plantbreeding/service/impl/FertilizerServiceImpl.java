@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Service implementation for managing fertilizers.
+ * Handles business logic for CRUD operations on fertilizers.
+ */
 @Service
 @Log4j2
 @RequiredArgsConstructor
@@ -19,12 +23,22 @@ public class FertilizerServiceImpl implements FertilizerService {
     private final FertilizerRepository fertilizerRepository;
     private final FertilizerMapper fertilizerMapper;
 
+    /**
+     * Retrieves all fertilizers from the database.
+     *
+     * @return a list of fertilizers
+     */
     @Override
     public List<FertilizerDto> getAllFertilizers() {
         List<Fertilizer> fertilizers = fertilizerRepository.findAll();
         return fertilizerMapper.toDtoList(fertilizers);
     }
-
+    /**
+     * Adds a new fertilizer to the database.
+     *
+     * @param fertilizerDto the fertilizer entity to add
+     * @return the saved fertilizer entity
+     */
     @Override
     @Transactional
     public void addFertilizer(FertilizerDto fertilizerDto) {

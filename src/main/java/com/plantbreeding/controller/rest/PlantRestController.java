@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing tasks.
+ * Provides endpoints for retrieving, adding, updating and deleting.
+ */
 @RestController
 @RequestMapping("/plants")
 @Log4j2
@@ -25,6 +29,14 @@ public class PlantRestController {
         this.plantService = plantService;
     }
 
+    /**
+     * Retrieves a list of all plants with optional filtering parameters.
+     *
+     * @param limit optional filter by plant
+     * @param isAnnual optional filter by plant is annual
+     * @param type optional filter by plant type (e.g., VEGETABLE, FRUIT)
+     * @return list of {@link PlantDto} matching the filters or all plants if no filters are provided
+     */
     @GetMapping()
     public ResponseEntity<List<PlantDto>> getAllPlants(@RequestParam(required = false) Integer limit,
                                                                 @RequestParam(required = false) Boolean isAnnual,
@@ -34,6 +46,12 @@ public class PlantRestController {
         return ResponseEntity.ok(filteredPlants);
     }
 
+    /**
+     * Retrieves a plant by its unique identifier.
+     *
+     * @param id the ID of the plant to retrieve
+     * @return the {@link PlantDto} for the specified ID
+     */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PlantDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
         log.info("Request ID: {}", requestId != null ? requestId : id);
@@ -41,17 +59,37 @@ public class PlantRestController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves a plant along with its associated tasks.
+     *
+     * @param id the ID of the plant to retrieve
+     * @return the {@link PlantWithTasksDto} containing plant details and its tasks
+     */
     @GetMapping("/{id}/tasks")
     public ResponseEntity<PlantWithTasksDto> getPlantWithTasks(@PathVariable Long id) {
         return ResponseEntity.ok(plantService.getPlantWithTasks(id));
     }
 
+    /**
+     * Creates a new plant.
+     *
+     * @param plantDto the plant data to create
+     * @return the created {@link PlantDto}
+     */
     @PostMapping()
     public ResponseEntity<MessageResponseDto> postPlant(@RequestBody @Valid PlantDto plantDto){
         plantService.addPlant(plantDto);
         return ResponseEntity.ok(new MessageResponseDto("Plant added successfully", HttpStatus.OK));
     }
 
+    /**
+     * Updates an existing plant.
+     *
+     * @param id           the ID of the plant to update
+     * @param healthStatus the updated plant health status
+     * @param height       the updated plant height
+     * @return the updated {@link PlantDto}
+     */
     @PatchMapping ("/{id}")
     public ResponseEntity<MessageResponseDto> updatePlant(@PathVariable Long id,
                                               @RequestParam HealthStatus healthStatus,
@@ -60,6 +98,11 @@ public class PlantRestController {
         return ResponseEntity.ok(new MessageResponseDto("Plant updated successfully with id: " + id, HttpStatus.OK));
     }
 
+    /**
+     * Deletes a plant by its unique identifier.
+     *
+     * @param id the ID of the plant to delete
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponseDto> deletePlant(@PathVariable Long id){
         plantService.deletePlant(id);

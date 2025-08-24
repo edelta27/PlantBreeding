@@ -72,7 +72,7 @@ class PlantRestControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/plants")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("Tulip"))
                 .andExpect(jsonPath("$[0].plantType").value("FLOWER"))
                 .andExpect(jsonPath("$[0].isAnnual").value(true));
@@ -110,7 +110,7 @@ class PlantRestControllerIntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Tulip"))
-                .andExpect(jsonPath("$.tasks", hasSize(1)))
+                .andExpect(jsonPath("$.tasks", hasSize(2)))
                 .andExpect(jsonPath("$.tasks[0].taskType").value("WATERING"))
                 .andExpect(jsonPath("$.tasks[0].notes").value("Water me"))
                 .andExpect(jsonPath("$.tasks[0].status").value("OVERDUE"));

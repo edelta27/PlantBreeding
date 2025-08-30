@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * REST controller for managing tasks.
+ * REST controller for managing plants.
  * Provides endpoints for retrieving, adding, updating and deleting.
  */
 @RestController

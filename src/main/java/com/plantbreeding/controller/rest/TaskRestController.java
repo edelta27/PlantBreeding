@@ -48,13 +48,13 @@ public class TaskRestController {
      * <p>The task is associated with a plant and contains
      * information such as description, date, and status.</p>
      *
-     * @param request the data of the new task, provided as a {@link TaskDto}
+     * @param taskRequestDto the data of the new task, provided as a {@link TaskDto}
      * @return a {@link ResponseEntity} containing the saved {@link TaskDto}
      */
     @PostMapping()
-    public ResponseEntity<MessageResponseDto> addTask(@RequestBody @Valid CreateTaskRequestDto request) {
-        taskService.createTask(request);
-        return ResponseEntity.ok(new MessageResponseDto("Task(s) added successfully", HttpStatus.OK));
+    public ResponseEntity<List<TaskDto>> addTask(@RequestBody @Valid CreateTaskRequestDto taskRequestDto) {
+        List<TaskDto> newTaskDto = taskService.createTask(taskRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTaskDto);
     }
 
     /**

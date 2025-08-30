@@ -59,14 +59,15 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Creates a new task associated with a specific plant.
      *
-     * @param request the task data to be saved
-     * @return the saved task DTO
+     * @param taskRequestDto the task data to be saved
+     * @return the saved tasks DTO
      */
     @Transactional
-    public void createTask(CreateTaskRequestDto request) {
-        Plant plant = findPlantById(request.plantId());
-        List<Task> tasks = generateRecurringTasks(request, plant);
-        taskRepository.saveAll(tasks);
+    public List<TaskDto> createTask(CreateTaskRequestDto taskRequestDto) {
+        Plant plant = findPlantById(taskRequestDto.plantId());
+        List<Task> tasks = generateRecurringTasks(taskRequestDto, plant);
+        List<Task> newTasks = taskRepository.saveAll(tasks);
+        return taskMapper.toDtoList(newTasks);
     }
 
     /**

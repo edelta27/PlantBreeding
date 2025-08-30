@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PlantService {
     List<Plant> findAll();
-    void addPlant(PlantDto plantDto);
+    PlantDto addPlant(PlantDto plantDto);
     List<PlantDto> findFilteredPlants(Boolean isAnnual, PlantType type, int limit);
     PlantDto getPlantById(Long id);
     PlantWithTasksDto getPlantWithTasks(Long plantId);

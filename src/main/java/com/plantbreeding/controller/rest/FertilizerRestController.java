@@ -43,9 +43,9 @@ public class FertilizerRestController {
      * @return the created fertilizer
      */
     @PostMapping()
-    public ResponseEntity<String> postFertilizer(@RequestBody @Valid FertilizerDto fertilizerDto){
-        fertilizerService.addFertilizer(fertilizerDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Fertilizer added successfully");
+    public ResponseEntity<FertilizerDto> postFertilizer(@RequestBody @Valid FertilizerDto fertilizerDto){
+        FertilizerDto createdFertilizer = fertilizerService.addFertilizer(fertilizerDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdFertilizer);
     }
 
 }

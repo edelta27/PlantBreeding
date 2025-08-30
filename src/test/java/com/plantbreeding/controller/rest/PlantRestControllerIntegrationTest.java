@@ -136,9 +136,9 @@ class PlantRestControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/plants")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Plant added successfully"))
-                .andExpect(jsonPath("$.status").value("OK"));
+                .andExpect(status().isCreated())
+
+                .andExpect(jsonPath("$.name").value("Rose"));
 
     }
 

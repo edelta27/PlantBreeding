@@ -74,12 +74,12 @@ public class PlantRestController {
      * Creates a new plant.
      *
      * @param plantDto the plant data to create
-     * @return the created {@link PlantDto}
+     * @return the created plant
      */
     @PostMapping()
-    public ResponseEntity<MessageResponseDto> postPlant(@RequestBody @Valid PlantDto plantDto){
-        plantService.addPlant(plantDto);
-        return ResponseEntity.ok(new MessageResponseDto("Plant added successfully", HttpStatus.OK));
+    public ResponseEntity<PlantDto> postPlant(@RequestBody @Valid PlantDto plantDto){
+        PlantDto createdPlant = plantService.addPlant(plantDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPlant);
     }
 
     /**

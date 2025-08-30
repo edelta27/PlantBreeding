@@ -62,9 +62,8 @@ class TaskRestControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Task(s) added successfully"))
-                .andExpect(jsonPath("$.status").value("OK"));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$[0].taskType").value("WATERING"));
     }
 
     @Test

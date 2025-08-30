@@ -41,9 +41,11 @@ public class FertilizerServiceImpl implements FertilizerService {
      */
     @Override
     @Transactional
-    public void addFertilizer(FertilizerDto fertilizerDto) {
+    public FertilizerDto addFertilizer(FertilizerDto fertilizerDto) {
         log.info("save fertilizer: ");
         Fertilizer fertilizer = fertilizerMapper.toEntity(fertilizerDto);
-        fertilizerRepository.save(fertilizer);
+        Fertilizer newFertilizer = fertilizerRepository.save(fertilizer);
+
+        return fertilizerMapper.toDto(newFertilizer);
     }
 }

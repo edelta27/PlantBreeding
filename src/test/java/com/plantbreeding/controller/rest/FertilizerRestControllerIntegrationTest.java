@@ -59,7 +59,8 @@ class FertilizerRestControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(content().string("Fertilizer added successfully"));
+
+                .andExpect(jsonPath("$.name").value("Target"));
 
     }
 }

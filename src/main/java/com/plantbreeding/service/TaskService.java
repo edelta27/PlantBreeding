@@ -9,7 +9,7 @@ import java.util.List;
 public interface TaskService {
     List<TaskDto> findAll();
     List<TaskDto> findTasksByDate(LocalDate taskDate);
-    void createTask(CreateTaskRequestDto request);
+    List<TaskDto> createTask(CreateTaskRequestDto request);
     List<TaskDto> findTasksByPlantId(Long plantId);
     void updateTasksStatus(Long id, TaskStatus taskStatus);
     void markOverdueTasks();

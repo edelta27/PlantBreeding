@@ -50,10 +50,11 @@ public class PlantServiceImpl implements PlantService {
      */
     @Override
     @Transactional
-    public void addPlant(PlantDto plantDto) {
+    public PlantDto addPlant(PlantDto plantDto) {
         log.info("save plant: ");
         Plant plant = plantMapper.toEntity(plantDto);
-        plantRepository.save(plant);
+        Plant newPlant = plantRepository.save(plant);
+        return plantMapper.toDto(newPlant);
     }
 
     /**

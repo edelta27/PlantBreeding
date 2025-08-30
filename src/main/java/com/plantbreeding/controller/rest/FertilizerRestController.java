@@ -31,7 +31,7 @@ public class FertilizerRestController {
      * @return a list of all available fertilizers
      */
     @GetMapping()
-    public ResponseEntity<List<FertilizerDto>> getAllFertilizer(){
+    public ResponseEntity<List<FertilizerDto>> getAllFertilizers(){
         List<FertilizerDto> response = fertilizerService.getAllFertilizers();
         return ResponseEntity.ok(response);
     }

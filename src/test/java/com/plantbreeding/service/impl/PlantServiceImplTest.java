@@ -19,14 +19,12 @@ import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
 import com.plantbreeding.mapper.PlantMapper;
 import com.plantbreeding.service.TaskService;
-import com.plantbreeding.exception.PlantNotFoundException;
+import com.plantbreeding.exception.ResourceNotFoundException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -140,7 +138,7 @@ class PlantServiceImplTest {
 
         // when // then
         assertThatThrownBy(() -> plantService.getPlantById(plantId))
-                .isInstanceOf(PlantNotFoundException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Plant with id " + plantId + " not found");
     }
 

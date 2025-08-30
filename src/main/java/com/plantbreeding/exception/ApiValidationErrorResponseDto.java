@@ -1,4 +1,4 @@
-package com.plantbreeding.apivalidation;
+package com.plantbreeding.exception;
 
 import org.springframework.http.HttpStatus;
 

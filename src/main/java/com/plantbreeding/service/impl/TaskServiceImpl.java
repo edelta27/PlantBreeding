@@ -5,8 +5,7 @@ import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enums.TaskStatus;
 import com.plantbreeding.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.dto.request.TaskDto;
-import com.plantbreeding.exception.PlantNotFoundException;
-import com.plantbreeding.exception.TaskNotFoundException;
+import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.TaskMapper;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
@@ -77,6 +76,9 @@ public class TaskServiceImpl implements TaskService {
      * @return a list of tasks associated with the plant
      */
     public List<TaskDto> findTasksByPlantId(Long plantId) {
+        plantRepository.findById(plantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
+
         List<Task> tasks = taskRepository.findByPlantId(plantId);
         List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
         return taskDtos;
@@ -92,7 +94,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public void updateTasksStatus(Long id, @NonNull TaskStatus taskStatus) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
         task.setStatus(taskStatus);
         taskRepository.save(task);
     }
@@ -112,7 +114,7 @@ public class TaskServiceImpl implements TaskService {
 
     private Plant findPlantById(Long plantId) {
         return plantRepository.findById(plantId)
-                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + plantId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
     }
 
     private List<Task> generateRecurringTasks(CreateTaskRequestDto request, Plant plant) {

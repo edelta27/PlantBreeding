@@ -5,7 +5,7 @@ import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
 import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
-import com.plantbreeding.exception.PlantNotFoundException;
+import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.PlantMapper;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.service.PlantService;
@@ -80,12 +80,12 @@ public class PlantServiceImpl implements PlantService {
      *
      * @param id the ID of the plant
      * @return the plant DTO if found
-     * @throws PlantNotFoundException if the plant is not found
+     * @throws ResourceNotFoundException if the plant is not found
      */
     @Override
     public PlantDto getPlantById(Long id) {
         Plant plant = plantRepository.findById(id)
-                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + id + " not found"));
         return plantMapper.toDto(plant);
     }
 
@@ -94,12 +94,12 @@ public class PlantServiceImpl implements PlantService {
      *
      * @param plantId the ID of the plant
      * @return the plant DTO including its tasks
-     * @throws PlantNotFoundException if the plant is not found
+     * @throws ResourceNotFoundException if the plant is not found
      */
     @Override
     public PlantWithTasksDto getPlantWithTasks(Long plantId) {
         Plant plant = plantRepository.findById(plantId)
-                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + plantId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
 
         return plantMapper.toPlantWithTasksDto(plant);
     }
@@ -111,13 +111,13 @@ public class PlantServiceImpl implements PlantService {
      * @param newHealthStatus     the new health status
      * @param newHeight     the new height value
      * @return the saved plant entity
-     * @throws PlantNotFoundException if the plant is not found
+     * @throws ResourceNotFoundException if the plant is not found
      */
     @Override
     @Transactional
     public void updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, Integer newHeight) {
         Plant plant = plantRepository.findById(id)
-                .orElseThrow(() -> new PlantNotFoundException("Plant with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + id + " not found"));
 
         if (newHealthStatus != null) {
             plant.setHealthStatus(newHealthStatus);
@@ -133,13 +133,13 @@ public class PlantServiceImpl implements PlantService {
      * Deletes a plant from the database.
      *
      * @param id the ID of the plant to delete
-     * @throws PlantNotFoundException if the plant is not found
+     * @throws ResourceNotFoundException if the plant is not found
      */
     @Override
     @Transactional
     public void deletePlant(Long id) {
         Plant plant = plantRepository.findById(id)
-                .orElseThrow(() -> new PlantNotFoundException("Plant with id" + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id" + id + " not found"));
         plantRepository.deleteById(id);
     }
 }

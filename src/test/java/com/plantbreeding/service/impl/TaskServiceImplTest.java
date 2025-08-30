@@ -6,9 +6,9 @@ import static org.mockito.Mockito.*;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enums.*;
-import com.plantbreeding.exception.TaskNotFoundException;
 import com.plantbreeding.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.dto.request.TaskDto;
+import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.TaskMapper;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
@@ -141,7 +141,7 @@ class TaskServiceImplTest {
         given(taskRepository.findById(taskId)).willReturn(Optional.empty());
 
         // when // then
-        org.junit.jupiter.api.Assertions.assertThrows(TaskNotFoundException.class, () -> {
+        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             taskService.updateTasksStatus(taskId, TaskStatus.OVERDUE);
         });
     }

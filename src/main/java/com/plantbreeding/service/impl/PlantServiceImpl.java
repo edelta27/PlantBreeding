@@ -9,12 +9,10 @@ import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.PlantMapper;
 import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.service.PlantService;
-import com.plantbreeding.specification.PlantSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,18 +60,13 @@ public class PlantServiceImpl implements PlantService {
      *
      * @param isAnnual   optional plant is annual filter
      * @param type       optional plant type filter
-     * @param limit      optional limit plant filter
+     * @param pageable   optional limit plant filter
      * @return a list of plants matching the specified filters
      */
     @Override
-    public List<PlantDto> findFilteredPlants(Boolean isAnnual, PlantType type, int limit) {
-        Pageable pageable = PageRequest.of(0, limit);
-
-        Specification<Plant> spec = Specification
-                .where(PlantSpecifications.hasIsAnnual(isAnnual))
-                .and(PlantSpecifications.hasType(type));
-        List<Plant> plants = plantRepository.findAll(spec, pageable).getContent();
-        return plantMapper.toDtoList(plants);
+    public Page<PlantDto> findFilteredPlants(Boolean isAnnual, PlantType type, Pageable pageable) {
+        Page<Plant> plants = plantRepository.findFilteredPlants(isAnnual, type, pageable);
+        return plants.map(plantMapper::toDto);
     }
 
     /**

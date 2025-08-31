@@ -9,12 +9,13 @@ import com.plantbreeding.dto.response.PlantWithTasksDto;
 
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * REST controller for managing plants.
@@ -32,17 +33,17 @@ public class PlantRestController {
     /**
      * Retrieves a list of all plants with optional filtering parameters.
      *
-     * @param limit optional filter by plant
+     * @param pageable optional filter by plant
      * @param isAnnual optional filter by plant is annual
      * @param type optional filter by plant type (e.g., VEGETABLE, FRUIT)
      * @return list of {@link PlantDto} matching the filters or all plants if no filters are provided
      */
     @GetMapping()
-    public ResponseEntity<List<PlantDto>> getAllPlants(@RequestParam(required = false) Integer limit,
-                                                                @RequestParam(required = false) Boolean isAnnual,
-                                                                @RequestParam(required = false) PlantType type){
-        int actualLimit = (limit != null) ? limit : Integer.MAX_VALUE;
-        List<PlantDto> filteredPlants = plantService.findFilteredPlants(isAnnual, type, actualLimit);
+    public ResponseEntity<Page<PlantDto>> getAllPlants(@RequestParam(required = false) Boolean isAnnual,
+                                                       @RequestParam(required = false) PlantType type,
+                                                       @PageableDefault(size = 10, page = 0) Pageable pageable){
+
+        Page<PlantDto> filteredPlants = plantService.findFilteredPlants(isAnnual, type, pageable);
         return ResponseEntity.ok(filteredPlants);
     }
 
@@ -52,7 +53,7 @@ public class PlantRestController {
      * @param id the ID of the plant to retrieve
      * @return the {@link PlantDto} for the specified ID
      */
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<PlantDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
         log.info("Request ID: {}", requestId != null ? requestId : id);
         PlantDto response = plantService.getPlantById(id);

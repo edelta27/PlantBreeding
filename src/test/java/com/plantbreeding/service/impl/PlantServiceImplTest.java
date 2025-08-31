@@ -42,10 +42,6 @@ class PlantServiceImplTest {
     private PlantRepository plantRepository;
     @Mock
     private PlantMapper plantMapper;
-    @Mock
-    private TaskRepository taskRepository;
-    @Mock
-    private TaskService taskService;
 
     @InjectMocks
     private PlantServiceImpl plantService;
@@ -105,11 +101,11 @@ class PlantServiceImplTest {
         given(plantMapper.toDtoList(List.of(plant))).willReturn(List.of(plantDto));
 
         // when
-        List<PlantDto> result = plantService.findFilteredPlants(isAnnual, type, limit);
+        Page<PlantDto> result = plantService.findFilteredPlants(isAnnual, type, pageable);
 
         // then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("Tulip");
+        assertThat(result.getContent().get(0).name()).isEqualTo("Tulip");
     }
 
     @Test

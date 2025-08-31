@@ -89,14 +89,14 @@ public class PlantRestController {
      * @param id           the ID of the plant to update
      * @param healthStatus the updated plant health status
      * @param height       the updated plant height
-     * @return the updated {@link PlantDto}
+     * @return the updated Plant
      */
     @PatchMapping ("/{id}")
-    public ResponseEntity<MessageResponseDto> updatePlant(@PathVariable Long id,
+    public ResponseEntity<PlantDto> updatePlant(@PathVariable Long id,
                                               @RequestParam HealthStatus healthStatus,
                                               @RequestParam Integer height) {
-        plantService.updatePlantHealthAndHeight(id, healthStatus, height);
-        return ResponseEntity.ok(new MessageResponseDto("Plant updated successfully with id: " + id, HttpStatus.OK));
+        PlantDto updatePlant = plantService.updatePlantHealthAndHeight(id, healthStatus, height);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatePlant);
     }
 
     /**

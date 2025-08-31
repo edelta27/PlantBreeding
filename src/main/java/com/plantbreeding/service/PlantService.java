@@ -16,6 +16,6 @@ public interface PlantService {
     Page<PlantDto> findFilteredPlants(Boolean isAnnual, PlantType type, Pageable pageable);
     PlantDto getPlantById(Long id);
     PlantWithTasksDto getPlantWithTasks(Long plantId);
-    void updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, Integer newHeight);
+    PlantDto updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, Integer newHeight);
     void deletePlant(Long id);
 }

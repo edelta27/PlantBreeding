@@ -152,8 +152,10 @@ class PlantRestControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/plants/{id}", 1)
                         .param("healthStatus", "SICK")
                         .param("height", String.valueOf(newHeight)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Plant updated successfully with id: " + 1));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.healthStatus").value("SICK"))
+                .andExpect(jsonPath("$.height").value(45));
+
 
         Optional<Plant> updatedPlant = plantRepository.findById(1L);
         assertThat(updatedPlant).isPresent();

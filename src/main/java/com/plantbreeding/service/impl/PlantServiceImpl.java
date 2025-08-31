@@ -110,7 +110,7 @@ public class PlantServiceImpl implements PlantService {
      */
     @Override
     @Transactional
-    public void updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, Integer newHeight) {
+    public PlantDto updatePlantHealthAndHeight(Long id, HealthStatus newHealthStatus, Integer newHeight) {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + id + " not found"));
 
@@ -121,7 +121,8 @@ public class PlantServiceImpl implements PlantService {
             plant.setHeight(newHeight);
         }
 
-        plantRepository.save(plant);
+        Plant updatedPlant = plantRepository.save(plant);
+        return plantMapper.toDto(updatedPlant);
     }
 
     /**

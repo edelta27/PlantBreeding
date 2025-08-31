@@ -83,6 +83,7 @@ public class PlantServiceImpl implements PlantService {
         return plantMapper.toDto(plant);
     }
 
+
     /**
      * Retrieves a plant along with all its associated tasks.
      *
@@ -92,7 +93,7 @@ public class PlantServiceImpl implements PlantService {
      */
     @Override
     public PlantWithTasksDto getPlantWithTasks(Long plantId) {
-        Plant plant = plantRepository.findById(plantId)
+        Plant plant = plantRepository.findByIdWithTasks(plantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
 
         return plantMapper.toPlantWithTasksDto(plant);

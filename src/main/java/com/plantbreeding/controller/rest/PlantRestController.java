@@ -55,7 +55,7 @@ public class PlantRestController {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<PlantDto> getPlantByID(@PathVariable Long id, @RequestHeader(required = false) String requestId){
-        log.info("Request ID: {}", requestId != null ? requestId : id);
+        log.info("Request received: requestId={}, plantId={}", requestId, id);
         PlantDto response = plantService.getPlantById(id);
         return ResponseEntity.ok(response);
     }

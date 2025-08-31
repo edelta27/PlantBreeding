@@ -26,7 +26,7 @@ public class Plant {
     private Boolean isAnnual;
     private String description;
     private Integer height;
-    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks;
     @ManyToMany
     @JoinTable(

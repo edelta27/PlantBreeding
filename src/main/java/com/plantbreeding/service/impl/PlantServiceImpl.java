@@ -134,8 +134,9 @@ public class PlantServiceImpl implements PlantService {
     @Override
     @Transactional
     public void deletePlant(Long id) {
-        Plant plant = plantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Plant with id" + id + " not found"));
+        if(!plantRepository.existsById(id)){
+            throw new ResourceNotFoundException("Plant with id" + id + " not found");
+        }
         plantRepository.deleteById(id);
     }
 }

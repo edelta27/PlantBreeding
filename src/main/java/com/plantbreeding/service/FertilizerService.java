@@ -7,4 +7,6 @@ import java.util.List;
 public interface FertilizerService {
     List<FertilizerDto> getAllFertilizers();
     FertilizerDto addFertilizer(FertilizerDto fertilizerDto);
+
+    void deleteFertilizer(Long id);
 }

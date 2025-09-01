@@ -1,5 +1,6 @@
 package com.plantbreeding.controller.rest;
 
+import com.plantbreeding.dto.response.MessageResponseDto;
 import com.plantbreeding.service.FertilizerService;
 import com.plantbreeding.dto.request.FertilizerDto;
 import jakarta.validation.Valid;
@@ -46,6 +47,12 @@ public class FertilizerRestController {
     public ResponseEntity<FertilizerDto> postFertilizer(@RequestBody @Valid FertilizerDto fertilizerDto){
         FertilizerDto createdFertilizer = fertilizerService.addFertilizer(fertilizerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFertilizer);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponseDto> deleteFertilizer(@PathVariable Long id){
+        fertilizerService.deleteFertilizer(id);
+        return ResponseEntity.ok(new MessageResponseDto("You deleted fertilizer with id: " + id, HttpStatus.OK));
     }
 
 }

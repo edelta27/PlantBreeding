@@ -2,6 +2,7 @@ package com.plantbreeding.service.impl;
 
 import com.plantbreeding.domain.entity.Fertilizer;
 import com.plantbreeding.dto.request.FertilizerDto;
+import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.FertilizerMapper;
 import com.plantbreeding.repository.FertilizerRepository;
 import com.plantbreeding.service.FertilizerService;
@@ -48,4 +49,15 @@ public class FertilizerServiceImpl implements FertilizerService {
 
         return fertilizerMapper.toDto(newFertilizer);
     }
+
+    @Override
+    @Transactional
+    public void deleteFertilizer(Long id) {
+        if(!fertilizerRepository.existsById(id)){
+            throw new ResourceNotFoundException("Fertilizer with id" + id + " not found");
+        }
+        fertilizerRepository.deleteById(id);
+    }
+
+
 }

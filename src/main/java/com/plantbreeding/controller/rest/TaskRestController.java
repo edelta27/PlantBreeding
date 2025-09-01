@@ -28,13 +28,13 @@ public class TaskRestController {
     }
 
     /**
-     * Retrieves the list of tasks scheduled for today.
+     * Gets a list of tasks scheduled for the specified day in param.
      *
      * <p>This endpoint is intended to help users quickly access
      * their daily planned activities related to plants.</p>
      *
-     * @return a {@link ResponseEntity} containing a list of {@link TaskDto} objects
-     *         scheduled for the current date
+     * @return a ResponseEntity containing a list of TaskDto objects
+     *         scheduled for the specified date
      */
     @GetMapping("/daily")
     public ResponseEntity<List<TaskDto>> getTasksForDate(@RequestParam("date") LocalDate taskDate) {
@@ -68,10 +68,10 @@ public class TaskRestController {
      * @return a {@link ResponseEntity} containing the updated {@link TaskDto}
      */
     @PatchMapping ("/{id}")
-    public ResponseEntity<MessageResponseDto> updateTask(@PathVariable Long id,
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id,
                                               @RequestParam TaskStatus taskStatus) {
-        taskService.updateTasksStatus(id, taskStatus);
-        return ResponseEntity.ok(new MessageResponseDto("Task updated successfully", HttpStatus.OK));
+        TaskDto updatedTask = taskService.updateTasksStatus(id, taskStatus);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedTask);
     }
 
 }

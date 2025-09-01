@@ -106,6 +106,7 @@ class TaskServiceImplTest {
         task.setPlant(plant);
         plant.setTasks(List.of(task));
 
+        given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
         given(taskRepository.findByPlantId(plantId)).willReturn(List.of(task));
         given(taskMapper.toDtoList(List.of(task))).willReturn(
                 List.of(new TaskDto(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE, plantId))

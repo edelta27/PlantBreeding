@@ -11,6 +11,6 @@ public interface TaskService {
     List<TaskDto> findTasksByDate(LocalDate taskDate);
     List<TaskDto> createTask(CreateTaskRequestDto request);
     List<TaskDto> findTasksByPlantId(Long plantId);
-    void updateTasksStatus(Long id, TaskStatus taskStatus);
+    TaskDto updateTasksStatus(Long id, TaskStatus taskStatus);
     void markOverdueTasks();
 }

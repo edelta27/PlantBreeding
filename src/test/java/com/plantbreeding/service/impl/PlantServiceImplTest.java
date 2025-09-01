@@ -1,6 +1,5 @@
 package com.plantbreeding.service.impl;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -97,8 +96,8 @@ class PlantServiceImplTest {
         PlantDto plantDto = new PlantDto(1L, "Tulip", PlantType.FLOWER, LocalDate.now(), HealthStatus.HEALTHY, true, "yellow flower", 15);
 
         Page<Plant> page = new PageImpl<>(List.of(plant));
-        given(plantRepository.findAll(any(Specification.class), eq(pageable))).willReturn(page);
-        given(plantMapper.toDtoList(List.of(plant))).willReturn(List.of(plantDto));
+        given(plantRepository.findFilteredPlants(isAnnual, type, pageable)).willReturn(page);
+        given(plantMapper.toDto(plant)).willReturn(plantDto);
 
         // when
         Page<PlantDto> result = plantService.findFilteredPlants(isAnnual, type, pageable);
@@ -151,7 +150,7 @@ class PlantServiceImplTest {
 
         PlantWithTasksDto plantWithTasksDto = new PlantWithTasksDto(plantId, "Tulip", PlantType.FLOWER, HealthStatus.HEALTHY,20, List.of(new TaskDto(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE,1L )));
 
-        given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
+        given(plantRepository.findByIdWithTasks(plantId)).willReturn(Optional.of(plant));
         given(plantMapper.toPlantWithTasksDto(plant)).willReturn(plantWithTasksDto);
 
         // when
@@ -192,13 +191,25 @@ class PlantServiceImplTest {
     void shouldDeletePlant() {
         // given
         Long plantId = 1L;
-        Plant plant = new Plant();
-        given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
+        given(plantRepository.existsById(plantId)).willReturn(true);
 
         // when
         plantService.deletePlant(plantId);
 
         // then
         verify(plantRepository).deleteById(plantId);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenPlantDoesNotExist() {
+        // given
+        Long plantId = 1L;
+        given(plantRepository.existsById(plantId)).willReturn(false);
+
+
+        // when + then
+        assertThrows(ResourceNotFoundException.class,
+                () -> plantService.deletePlant(plantId));
+        verify(plantRepository, never()).deleteById(anyLong());
     }
 }

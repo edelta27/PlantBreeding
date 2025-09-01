@@ -38,6 +38,7 @@ public class TaskServiceImpl implements TaskService {
      *
      * @return a list of tasks
      */
+    @Override
     public List<TaskDto> findAll() {
         log.info("retrieving all tasks: ");
         List<Task> tasks = taskRepository.findAll();
@@ -50,6 +51,7 @@ public class TaskServiceImpl implements TaskService {
      * @param taskDate   optional task in date
      * @return a list of tasks matching the specified filters
      */
+    @Override
     public List<TaskDto> findTasksByDate(LocalDate taskDate) {
         List<Task> tasks = taskRepository.findByTaskDate(taskDate);
         List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
@@ -62,6 +64,7 @@ public class TaskServiceImpl implements TaskService {
      * @param taskRequestDto the task data to be saved
      * @return the saved tasks DTO
      */
+    @Override
     @Transactional
     public List<TaskDto> createTask(CreateTaskRequestDto taskRequestDto) {
         Plant plant = findPlantById(taskRequestDto.plantId());
@@ -76,6 +79,7 @@ public class TaskServiceImpl implements TaskService {
      * @param plantId the ID of the plant
      * @return a list of tasks associated with the plant
      */
+    @Override
     public List<TaskDto> findTasksByPlantId(Long plantId) {
         plantRepository.findById(plantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
@@ -92,14 +96,33 @@ public class TaskServiceImpl implements TaskService {
      * @param taskStatus the new task status
      * @return the updated task DTO
      */
+    @Override
     @Transactional
-    public void updateTasksStatus(Long id, @NonNull TaskStatus taskStatus) {
+    public TaskDto updateTasksStatus(Long id, @NonNull TaskStatus taskStatus) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
         task.setStatus(taskStatus);
-        taskRepository.save(task);
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDto(updatedTask);
     }
 
+    /**
+     * Marks all scheduled tasks as overdue if their planned date is before today.
+     *
+     * This method is executed automatically every day at midnight (00:00)
+     * according to the cron expression ( 0 0 0 * * ? ).
+     * It searches for tasks with  TaskStatus#SCHEDULED status
+     * and a task date earlier than the current date,
+     * then updates their status to TaskStatus#OVERDUE.
+     *
+     * The operation is transactional – either all affected tasks are updated
+     * and saved in the database, or none are in case of failure.
+     *
+     * Additionally, the method logs the number of tasks that were updated.
+     *
+     *  TaskRepository#findByStatusAndTaskDateBefore(TaskStatus, LocalDate)
+     */
+    @Override
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void markOverdueTasks() {

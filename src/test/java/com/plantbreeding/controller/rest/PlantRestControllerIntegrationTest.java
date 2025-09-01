@@ -72,10 +72,10 @@ class PlantRestControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/plants")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name").value("Tulip"))
-                .andExpect(jsonPath("$[0].plantType").value("FLOWER"))
-                .andExpect(jsonPath("$[0].isAnnual").value(true));
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].name").value("Tulip"))
+                .andExpect(jsonPath("$.content[0].plantType").value("FLOWER"))
+                .andExpect(jsonPath("$.content[0].isAnnual").value(true));
     }
 
     @Test

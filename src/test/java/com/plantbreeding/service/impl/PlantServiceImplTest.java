@@ -10,14 +10,12 @@ import com.plantbreeding.domain.enums.TaskStatus;
 import com.plantbreeding.domain.enums.TaskType;
 import com.plantbreeding.dto.request.TaskDto;
 import com.plantbreeding.repository.PlantRepository;
-import com.plantbreeding.repository.TaskRepository;
 import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
 import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.dto.response.PlantWithTasksDto;
 import com.plantbreeding.mapper.PlantMapper;
-import com.plantbreeding.service.TaskService;
 import com.plantbreeding.exception.ResourceNotFoundException;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +27,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -205,7 +202,6 @@ class PlantServiceImplTest {
         // given
         Long plantId = 1L;
         given(plantRepository.existsById(plantId)).willReturn(false);
-
 
         // when + then
         assertThrows(ResourceNotFoundException.class,

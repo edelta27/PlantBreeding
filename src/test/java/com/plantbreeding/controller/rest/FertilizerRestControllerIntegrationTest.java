@@ -63,4 +63,37 @@ class FertilizerRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Target"));
 
     }
+
+    @Test
+    void shouldDeleteFertilizerSuccessfully() throws Exception {
+        // given
+        FertilizerDto fertilizerDto = new FertilizerDto(
+                null,
+                "BioFert",
+                FertilizerType.ORGANIC,
+                ApplicationMethod.GRANULATED ,
+                "Apply twice a year"
+        );
+
+        String json = objectMapper.writeValueAsString(fertilizerDto);
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/fertilizers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        FertilizerDto createdFertilizer = objectMapper.readValue(response, FertilizerDto.class);
+        Long createdId = createdFertilizer.id();
+
+        // when + then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/fertilizers/{id}", createdId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("You deleted fertilizer with id: " + createdId))
+                .andExpect(jsonPath("$.status").value("OK"));
+    }
+
+
 }

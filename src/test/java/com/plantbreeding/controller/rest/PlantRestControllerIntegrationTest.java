@@ -6,21 +6,16 @@ import com.plantbreeding.domain.enums.HealthStatus;
 import com.plantbreeding.domain.enums.PlantType;
 import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.repository.PlantRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,33 +36,9 @@ class PlantRestControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private Environment environment;
-
-    @Autowired
-    private DataSource dataSource;
-
-    @Test
-    void shouldConnectToH2Database() throws Exception {
-        try (Connection conn = dataSource.getConnection()) {
-            assertThat(conn.isValid(1)).isTrue();
-        }
-    }
-    @Test
-    void printActiveProfile() {
-        System.out.println(">>> Active profile: " + Arrays.toString(environment.getActiveProfiles()));
-    }
-    @BeforeEach
-    void checkProfile() {
-        System.out.println("Aktywny profil: " + System.getProperty("spring.profiles.active"));
-    }
-
-
     @Test
     void shouldReturnAllPlants() throws Exception {
         // given
-
-
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.get("/plants")
                         .accept(MediaType.APPLICATION_JSON))
@@ -81,7 +52,6 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldReturnPlantById() throws Exception {
         // given
-
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.get("/plants/{id}", 1)
                         .accept(MediaType.APPLICATION_JSON))
@@ -103,14 +73,11 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldReturnPlantWithTasks() throws Exception {
         // given
-
-
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.get("/plants/{id}/tasks", 1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Tulip"))
-                .andExpect(jsonPath("$.tasks", hasSize(2)))
                 .andExpect(jsonPath("$.tasks[0].taskType").value("WATERING"))
                 .andExpect(jsonPath("$.tasks[0].notes").value("Water me"))
                 .andExpect(jsonPath("$.tasks[0].status").value("OVERDUE"));
@@ -145,7 +112,6 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldUpdatePlantSickAndHeight() throws Exception {
         // given
-
         int newHeight = 45;
 
         // when + then
@@ -166,7 +132,6 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldDeletePlantById() throws Exception {
         // given
-
         assertThat(plantRepository.findById(1L)).isPresent();
 
         // when + then

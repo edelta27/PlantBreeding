@@ -29,10 +29,8 @@ class PlantRestControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private PlantRepository plantRepository;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -43,7 +41,7 @@ class PlantRestControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/plants")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content", hasSize(3)))
                 .andExpect(jsonPath("$.content[0].name").value("Tulip"))
                 .andExpect(jsonPath("$.content[0].plantType").value("FLOWER"))
                 .andExpect(jsonPath("$.content[0].isAnnual").value(true));
@@ -132,14 +130,14 @@ class PlantRestControllerIntegrationTest {
     @Test
     void shouldDeletePlantById() throws Exception {
         // given
-        assertThat(plantRepository.findById(1L)).isPresent();
+        assertThat(plantRepository.findById(3L)).isPresent();
 
         // when + then
-        mockMvc.perform(MockMvcRequestBuilders.delete("/plants/{id}", 1))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/plants/{id}", 3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("You deleted plant with id: " + 1));
+                .andExpect(jsonPath("$.message").value("You deleted plant with id: " + 3));
 
-        assertThat(plantRepository.findById(1L)).isNotPresent();
+        assertThat(plantRepository.findById(3L)).isNotPresent();
     }
 
 }

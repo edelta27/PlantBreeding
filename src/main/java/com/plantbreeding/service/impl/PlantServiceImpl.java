@@ -83,6 +83,12 @@ public class PlantServiceImpl implements PlantService {
         return plantMapper.toDto(plant);
     }
 
+    @Override
+    public Plant getPlantEntityById(Long id) {
+        return plantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + id + " not found"));
+    }
+
 
     /**
      * Retrieves a plant along with all its associated tasks.

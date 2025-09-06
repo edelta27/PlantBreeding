@@ -27,7 +27,6 @@ class TaskRestControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -46,6 +45,7 @@ class TaskRestControllerIntegrationTest {
     @Test
     void shouldAddTaskSuccessfully() throws Exception {
         // given
+
         CreateTaskRequestDto requestDto = new CreateTaskRequestDto(
                 1L,
                 TaskType.WATERING,

@@ -7,12 +7,13 @@ import com.plantbreeding.domain.entity.Plant;
 import com.plantbreeding.domain.entity.Task;
 import com.plantbreeding.domain.enums.*;
 import com.plantbreeding.dto.request.CreateTaskRequestDto;
+import com.plantbreeding.dto.request.PlantDto;
 import com.plantbreeding.dto.request.TaskDto;
 import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.TaskMapper;
-import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
 
+import com.plantbreeding.service.PlantService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,11 +31,12 @@ class TaskServiceImplTest {
     @Mock
     private TaskRepository taskRepository;
     @Mock
-    private PlantRepository plantRepository;
-    @Mock
     private TaskMapper taskMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
+    @Mock
+    private PlantService plantService;
+
 
     @Test
     void shouldFindAllTasks() {
@@ -86,8 +88,17 @@ class TaskServiceImplTest {
                 LocalDate.now().plusDays(2),
                 Recurrence.DAILY
         );
-        Plant plant = new Plant();
-        given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
+        Plant plant = new Plant(
+                "Tulip",
+                PlantType.FLOWER,
+                LocalDate.of(2024, 3, 1),
+                HealthStatus.HEALTHY,
+                true,
+                "Test description",
+                25
+        );
+        plant.setId(plantId);
+        given(plantService.getPlantEntityById(plantId)).willReturn(plant);
 
         // when
         taskService.createTask(request);
@@ -105,12 +116,19 @@ class TaskServiceImplTest {
         Task task = new Task(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE,1L );
         task.setPlant(plant);
         plant.setTasks(List.of(task));
-
-        given(plantRepository.findById(plantId)).willReturn(Optional.of(plant));
-        given(taskRepository.findByPlantId(plantId)).willReturn(List.of(task));
-        given(taskMapper.toDtoList(List.of(task))).willReturn(
-                List.of(new TaskDto(1L, TaskType.WATERING, "Water me", localDate, TaskStatus.OVERDUE, plantId))
+        PlantDto plantDto = new PlantDto(
+                plantId, "Tulip", PlantType.FLOWER, LocalDate.of(2024,3,1),
+                HealthStatus.HEALTHY, true, "Test description", 25
         );
+
+        TaskDto taskDto = new TaskDto(
+                1L, TaskType.WATERING, "Water me", localDate,
+                TaskStatus.OVERDUE, plantId
+        );
+
+        given(plantService.getPlantById(plantId)).willReturn(plantDto);
+        given(taskRepository.findByPlantId(plantId)).willReturn(List.of(task));
+        given(taskMapper.toDtoList(List.of(task))).willReturn(List.of(taskDto));
 
         // when
         List<TaskDto> result = taskService.findTasksByPlantId(plantId);

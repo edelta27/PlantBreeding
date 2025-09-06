@@ -7,8 +7,8 @@ import com.plantbreeding.dto.request.CreateTaskRequestDto;
 import com.plantbreeding.dto.request.TaskDto;
 import com.plantbreeding.exception.ResourceNotFoundException;
 import com.plantbreeding.mapper.TaskMapper;
-import com.plantbreeding.repository.PlantRepository;
 import com.plantbreeding.repository.TaskRepository;
+import com.plantbreeding.service.PlantService;
 import com.plantbreeding.service.TaskService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
-    private final PlantRepository plantRepository;
+    private final PlantService plantService;
     private final TaskMapper taskMapper;
 
     /**
@@ -67,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<TaskDto> createTask(CreateTaskRequestDto taskRequestDto) {
-        Plant plant = findPlantById(taskRequestDto.plantId());
+        Plant plant = plantService.getPlantEntityById(taskRequestDto.plantId());
         List<Task> tasks = generateRecurringTasks(taskRequestDto, plant);
         List<Task> newTasks = taskRepository.saveAll(tasks);
         return taskMapper.toDtoList(newTasks);
@@ -81,9 +81,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskDto> findTasksByPlantId(Long plantId) {
-        plantRepository.findById(plantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
-
+        plantService.getPlantById(plantId);
         List<Task> tasks = taskRepository.findByPlantId(plantId);
         List<TaskDto> taskDtos = taskMapper.toDtoList(tasks);
         return taskDtos;
@@ -134,11 +132,6 @@ public class TaskServiceImpl implements TaskService {
             taskRepository.saveAll(overdueTasks);
             log.info("Updated {} tasks on OVERDUE", overdueTasks.size());
         }
-    }
-
-    private Plant findPlantById(Long plantId) {
-        return plantRepository.findById(plantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Plant with id " + plantId + " not found"));
     }
 
     private List<Task> generateRecurringTasks(CreateTaskRequestDto request, Plant plant) {
